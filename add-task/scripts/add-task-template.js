@@ -1,7 +1,7 @@
 /**
  * render function for add task
  * @param {*} type 
- * @returns 
+ * @returns {string}
  */
 function getAddTask(type) {
     return `
@@ -122,7 +122,7 @@ function getAddTask(type) {
 /**
  * render users in the dropdown in add task
  * @param {*} assigned 
- * @returns 
+ * @returns {string}
  */
 function renderAssignedUser(assigned) {
     let initials = assigned.name.split(' ').map(name => name.charAt(0).toUpperCase()).join('');
@@ -151,8 +151,8 @@ function rendererAvatar(user) {
 
 /**
  * render subtasks in the add task
- * @param {*} id 
- * @returns 
+ * @param {*} id
+ * @returns {string}
  */
 function renderSubtasks(id) {
     return `<div class="validation" id="validation-messages-div-${id}" >
@@ -171,7 +171,7 @@ function renderSubtasks(id) {
 /**
  * render edit subtask in the add task
  * @param {*} id 
- * @returns 
+ * @returns {string}
  */
 function renderEditSubtask(id) {
     return `<input id="edit-input-${id}" maxlength="100" class="edit-input" placeholder="Add new subtask"/>                      

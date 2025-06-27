@@ -45,7 +45,7 @@ function getGreeting() {
 /**
  * check login status
  * @param {*} sessionUser 
- * @returns 
+ * @returns {*}
  */
 function checkPager(sessionUser) {
     if (!sessionUser) {

@@ -27,7 +27,7 @@ async function loadUserCounter() {
 /**
  * check login status
  * @param {*} sessionUser 
- * @returns 
+ * @returns {*}
  */
 function checkPager(sessionUser) {    
     const isSignUp = window.location.pathname.includes("join/sign-up/sign-up.html");
@@ -59,7 +59,7 @@ function signUp() {
  *
  * @param {*} path 
  * @param {*} data 
- * @returns 
+ * @returns {*}
  */
 async function putUsercount(path="", data="") { // Anlegen von Daten 
     let response = await fetch(BASE_URL + path + ".json",{
@@ -78,7 +78,7 @@ async function putUsercount(path="", data="") { // Anlegen von Daten
  * create new user in database
  * @param {*} path 
  * @param {*} data 
- * @returns 
+ * @returns {*}
  */
 async function postData(path="", data="") { // Anlegen von Daten 
     let response = await fetch(BASE_URL + path + ".json",{
@@ -114,7 +114,7 @@ function showSuccessMsgTasks(name,email) {
  * @param {*} name 
  * @param {*} email 
  * @param {*} password1 
- * @returns 
+ * @returns {boolean}
  */
 async function loadingSignUsers(name, email, password1) {
     try {
@@ -142,7 +142,7 @@ async function loadingSignUsers(name, email, password1) {
  * @param {*} name 
  * @param {*} email 
  * @param {*} password1 
- * @returns 
+ * @returns {boolean}
  */
 async function isExistingUser(existingUser, name, email, password1) {
     if (existingUser) {
@@ -181,7 +181,7 @@ function showError(div, message) {
 
 /**
  * validate sign up form
- * @returns 
+ * @returns {boolean}
  */
 async function validateSignUpForm() {
     let name = document.getElementById('name-input').value;
@@ -243,7 +243,7 @@ async function createNewUser(name, email, password) {
  * @param {*} password2 
  * @param {*} checkbox 
  * @param {*} emailRegex 
- * @returns 
+ * @returns {boolean}
  */
 function validateFunction(name, email, password1, password2, checkbox, emailRegex) {
     if (name.trim().length < 2) {
@@ -276,7 +276,7 @@ function validateFunction(name, email, password1, password2, checkbox, emailRege
 /**
  * password validation
  * @param {*} password 
- * @returns 
+ * @returns {boolean}
  */
 function validatePassword(password) {
     const passwordRegex = /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)[a-zA-Z\d!@#$%^&*()_+\-=[\]{};':"\\|,.<>/?]{8,}$/;

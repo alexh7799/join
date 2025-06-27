@@ -2,7 +2,7 @@
 <html lang="en">
 <head>
     <meta charset="utf-8">
-    <title>JSDoc: Source: script.js</title>
+    <title>JSDoc: Source: login/scripts/login.js</title>
 
     <script src="scripts/prettify/prettify.js"> </script>
     <script src="scripts/prettify/lang-css.js"> </script>
@@ -17,7 +17,7 @@
 
 <div id="main">
 
-    <h1 class="page-title">Source: script.js</h1>
+    <h1 class="page-title">Source: login/scripts/login.js</h1>
 
     
 
@@ -26,118 +26,168 @@
     
     <section>
         <article>
-            <pre class="prettyprint source linenums"><code>const BASE_URL ="https://join-b1b53-default-rtdb.europe-west1.firebasedatabase.app";
+            <pre class="prettyprint source linenums"><code>let path = "/users/";
+
+let rememberMeValue = false;
 
 /**
- * go back to the last page
+ * init function for login Page
  */
-function goBack() {
-  window.history.back();
+function initLogin() {
+    loadingPasswordIcons();
+    checkLogin();
 }
 
 
 /**
- * load nav and header
+ * go to the sign up page
  */
-function includeHTML() {
-  let navigation = document.getElementById("navigation-container");
-  navigation.innerHTML = initNav();
-  let header = document.getElementById("header-container");
-  header.innerHTML = initHeader();
-  let popUp = document.getElementById("overlay-container");
-  popUp.innerHTML = initProfilePopUp();
+function goToSignUp() {
+    window.location.assign("../sign-up/sign-up.html")
 }
 
 
 /**
- * check the login status
+ * loading the lock image
  */
-function checkLogin() {
-  const isLoginPage = window.location.pathname.includes("join/login/login.html");
-  const sessionUser = sessionStorage.getItem("username");
-  const localUser = localStorage.getItem("username");
+function loadingPasswordIcons() {
+    const passwordInput = document.getElementById("password-input");
 
-  // Wenn Remember-Me aktiv (localUser vorhanden)
-  if (localUser &amp;&amp; !sessionUser) {
-    sessionStorage.setItem("username", localUser);
-    sessionStorage.setItem("email", localStorage.getItem("email"));
-  }
+    passwordInput.addEventListener("input", () => {
+        if (passwordInput.value) {
+            hiddenImg();
+            document.getElementById("password-icon").style.pointerEvents = "auto";
+        } else {
+            lockImg();
+        }
+    });
 
-  checkPager(sessionUser);
+    hiddenImg();
 }
 
 
 /**
- * Generate initials for the top right corner in the header section.
+ * check login status
+ * @param {*} sessionUser 
+ * @returns {*}
  */
-function generateInitials() {
-  let content = document.getElementById("profile");
-
-  let userName = sessionStorage.getItem("username");
-  content.innerHTML = "";
-  let nameParts = userName.split(" ");
-  if (nameParts.length >= 2) {
-    let initials = (nameParts[0][0] + nameParts[1][0]).toUpperCase();
-    content.innerHTML = initials;
-  } else if (nameParts.length === 1) {
-    let initials = nameParts[0][0].toUpperCase();
-    content.innerHTML = initials;
-  } else {
-    content.innerHTML = "G";
-  }
-}
-
-
-/**
- * random color function for the profile section
- * @returns {string}
- */
-function getRandomColor() {
-  const r = Math.floor(Math.random() * 256);
-  const g = Math.floor(Math.random() * 256);
-  const b = Math.floor(Math.random() * 256);
-  return `#${r.toString(16).padStart(2, '0')}${g.toString(16).padStart(2, '0')}${b.toString(16).padStart(2, '0')}`;
-}
-
-
-/**
- * check link function to highlight the active link in the sidebar
- */
-function checkLink() {
-  const currentPath = window.location.pathname;
-  const sidebarLinks = document.querySelectorAll('#navigation-container .aside-nav a');
-  sidebarLinks.forEach(link => {
-    link.classList.remove('active');
-    let href = link.getAttribute('href').replace('../', '');
-    if (currentPath.includes(href)) {
-      link.classList.add('active');
-    } else {
-      link.classList.remove('active');
+function checkPager(sessionUser) {
+    if ((sessionUser)) {
+        window.location.href = "../summary/summary.html";
+        return;
     }
-  });
 }
 
 
 /**
- * not logged in function to hide the sidebar and profile section
+ * guest-login function
  */
-function notLogin() {
-  let sidebar = document.getElementById('navigation-container');
-  let profile = document.getElementById('profile');
-  let info = document.getElementById('info');
-  let asideNav = document.getElementById('aside-nav');
-  if (sessionStorage.getItem("username") == null) {
-    sidebar.classList.add('no-login-sidebar-none');
-    profile.classList.add('no-login-none');
-    info.classList.add('no-login-none');
-    asideNav.classList.add('no-login-none');
-  } else {
-    sidebar.classList.remove('no-login-sidebar-none');
-    profile.classList.remove('no-login-none');
-    info.classList.remove('no-login-none');
-    asideNav.classList.remove('no-login-none');
-    generateInitials();
-  }
+function guestLogin() {
+    sessionStorage.setItem('username', 'Guest');
+    window.location.href = '../summary/summary.html';
+}
+
+
+/**
+ * event listener for login button
+ */
+let container = document.getElementById("login-form-container");
+container.addEventListener("submit", async function (event){
+    event.preventDefault();
+})
+
+
+/**
+ * check if the user in database
+ */
+async function checkUser() {
+    const resultDiv = document.getElementById('result');
+    const emailInput = document.getElementById('email-input').value;
+    const passwordInput = document.getElementById('password-input').value;
+    try {
+        await loadUsers(resultDiv,emailInput,passwordInput);
+    } catch (error) {
+        console.error(error);
+        resultDiv.innerHTML = "Fehler bei der Suche.";
+    }
+};
+
+
+/**
+ * fetch all users in the datebase
+ * @param {*} resultDiv 
+ * @param {*} emailInput 
+ * @param {*} passwordInput 
+ * @returns {*}
+ */
+async function loadUsers(resultDiv,emailInput,passwordInput) {
+    let users;
+    let foundUser = null;
+    const response = await fetch(BASE_URL + path + ".json");
+    if (!response.ok) throw new Error("Fehler beim Abrufen der Datenbank.");
+    users = await response.json();
+        if(emailInput === "" || passwordInput === "") {
+            resultDiv.innerHTML = "Please fill in all fields.";
+            return;
+        }
+
+    await validateUser(foundUser, users, resultDiv,emailInput,passwordInput);
+}
+
+
+/**
+ * validate currentUser and database User
+ * @param {*} foundUser 
+ * @param {*} users 
+ * @param {*} resultDiv 
+ * @param {*} emailInput 
+ * @param {*} passwordInput 
+ */
+async function validateUser(foundUser, users, resultDiv,emailInput,passwordInput) {
+    for (const key in users) {
+        if (users[key].email == emailInput &amp;&amp; users[key].password == passwordInput) {
+            foundUser = users[key];
+            break;
+        }
+    }
+    await saveCurrentUser(resultDiv, foundUser)
+}
+
+
+/**
+ * save the current user in sessionSorage
+ * @param {*} resultDiv 
+ * @param {*} foundUser 
+ */
+function saveCurrentUser(resultDiv, foundUser) {
+    if (foundUser) {
+        sessionStorage.setItem('username', foundUser.name);
+        sessionStorage.setItem('email', foundUser.email);
+        if (rememberMeValue) {
+            localStorage.setItem('username', foundUser.name);
+            localStorage.setItem('email', foundUser.email);
+            window.location.href = '../summary/summary.html';
+        } else {
+            window.location.href = '../summary/summary.html';
+        }
+        
+    } else {
+        resultDiv.innerHTML = `No matching Account found. &lt;a href="">Join us&lt;/a> now!`;
+    }
+}
+
+
+/**
+ * toggle the Remember Me button
+ */
+function toggleRememberMeBtn() {
+    const rememberMeBtn = document.getElementById('remember-me-btn');
+    rememberMeBtn.classList.toggle('checked');
+    if (rememberMeBtn.className.includes('checked')) {
+        rememberMeValue = true;
+    } else {
+        rememberMeValue = false;
+    }
 }</code></pre>
         </article>
     </section>

@@ -42,7 +42,6 @@ function handleDragLeave(id) {
 
 /**
  * adds an border to the selected/aktive div.
- *
  * @param {number} id
  */
 function handleDragOver(id) {
@@ -72,15 +71,12 @@ async function fetchNewType(event, newType, taskId) {
     event.preventDefault();
 
     try {
-        // Erst das ganze Task-Objekt holen
         const response = await fetch(BASE_URL + "/tasks/" + taskId + "/.json");
         let task = await response.json();
         if (!task) throw new Error("Task not found");
 
-        // Typ ändern
         task.type = newType;
 
-        // Mit PUT zurückschreiben
         await fetch(BASE_URL + "/tasks/" + taskId + "/.json", {
             method: 'PUT',
             headers: { "Content-Type": "application/json" },

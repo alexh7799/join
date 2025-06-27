@@ -1,0 +1,486 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8">
+    <title>JSDoc: Source: board/scripts/template.js</title>
+
+    <script src="scripts/prettify/prettify.js"> </script>
+    <script src="scripts/prettify/lang-css.js"> </script>
+    <!--[if lt IE 9]>
+      <script src="//html5shiv.googlecode.com/svn/trunk/html5.js"></script>
+    <![endif]-->
+    <link type="text/css" rel="stylesheet" href="styles/prettify-tomorrow.css">
+    <link type="text/css" rel="stylesheet" href="styles/jsdoc-default.css">
+</head>
+
+<body>
+
+<div id="main">
+
+    <h1 class="page-title">Source: board/scripts/template.js</h1>
+
+    
+
+
+
+    
+    <section>
+        <article>
+            <pre class="prettyprint source linenums"><code>/**
+ * renderer card in the board
+ * @param {*} task 
+ * @param {*} subtask 
+ * @returns {string}
+ */
+function renderTaskCard(task, subtask) {
+    let descr = textTrimmer(task.descr, 35);
+    let taskCategory = task.cat.replace(/\s/g, '').toLowerCase();
+    let prio = task.prio.toLowerCase();
+    let card = `&lt;div class="spliter-fields" id="task${task.firebaseId}" onclick="showEditTask('${task.firebaseId}', 'bigCard')" draggable="true" ondragstart="handleDrag('${task.firebaseId}')" ondragend="handleDragEnd(event, '${task.firebaseId}')">
+                &lt;div class="task">
+                    &lt;div class="task-header">
+                        &lt;div class="d-flex-sb-c">
+                            &lt;div class="${taskCategory}-task-header">
+                                ${task.cat}
+                            &lt;/div>`
+    card += renderArrow(task) + `&lt;/div>
+                        &lt;div>
+                        &lt;/div>
+                    &lt;/div>
+                    &lt;div class="task-text-bold">
+                        ${task.title}
+                    &lt;/div>
+                    &lt;div class="task-text">
+                        &lt;p>${descr}&lt;p>
+                    &lt;/div>`
+    if (subtask == 0) {
+        card += `&lt;div class="subtasks-container">&lt;/div>`
+    } else {
+        card += `&lt;div class="subtasks-container">
+                    &lt;progress class="progressbar" value="${subtask.min}" max="${subtask.max}">&lt;/progress>
+                    &lt;p style="font-size: 12px;">${subtask.min}/${subtask.max} Subtasks&lt;/p>
+                &lt;/div>`
+    }
+    card += `&lt;div class="task-footer">&lt;div class="avatar-div" id="avatar-container${task.firebaseId}">
+                &lt;/div>
+                        &lt;div>
+                            &lt;img src="../assets/icons/${prio}.svg" alt="">
+                        &lt;/div>
+                    &lt;/div>
+                &lt;/div>
+            &lt;/div>`
+    return card;
+}
+
+
+/**
+ * renderer for the no card in the board
+ * @returns {string}
+ */
+function renderNoTaskCard() {
+    return `&lt;div class="split-spliter-fields" id="task">
+                &lt;div class="no-task" id="noTask">
+                    &lt;p style="color: #a8a8a8;">No task To do&lt;/p>
+                &lt;/div>
+            &lt;/div>`
+}
+
+
+/**
+ * render the Not Find Banner
+ * @returns {string}
+ */
+function renderNotFindTask() {
+    return `&lt;div class="split-spliter-fields">
+                &lt;div class="not-task-find">
+                    &lt;p style="color: #a8a8a8;">No task find!&lt;/p>
+                &lt;/div>
+            &lt;/div>`
+}
+
+
+
+/**
+ * render arrow in the card
+ * @param {*} task 
+ * @returns {string}
+ */
+function renderArrow(task) {
+    if(task.type == 'todo') {
+        return `&lt;div class="move-btn">
+            &lt;img src="../assets/icons/arrow-dropdown.svg" onclick="event.stopPropagation(); fetchNewType(event, 'progress', '${task.firebaseId}')">
+        &lt;/div>`
+    } else if(task.type == 'progress') {
+        return `&lt;div class="d-flex-c-c gap-5 move-btn">
+            &lt;img src="../assets/icons/arrow-up-dropdown.svg" onclick="event.stopPropagation(); fetchNewType(event, 'todo', '${task.firebaseId}')">
+            &lt;img src="../assets/icons/arrow-dropdown.svg" onclick="event.stopPropagation(); fetchNewType(event, 'awaiting', '${task.firebaseId}')">
+        &lt;/div>`
+    } else if(task.type == 'awaiting') {
+        return `&lt;div class="d-flex-c-c gap-5 move-btn">
+            &lt;img src="../assets/icons/arrow-up-dropdown.svg" onclick="event.stopPropagation(); fetchNewType(event, 'progress', '${task.firebaseId}')">
+            &lt;img src="../assets/icons/arrow-dropdown.svg" onclick="event.stopPropagation(); fetchNewType(event, 'done', '${task.firebaseId}')">
+        &lt;/div>`
+    } else if(task.type == 'done') {
+        return `&lt;div class="move-btn">
+            &lt;img src="../assets/icons/arrow-up-dropdown.svg" onclick="event.stopPropagation(); fetchNewType(event, 'awaiting', '${task.firebaseId}')">
+        &lt;/div>`
+    }
+}
+
+
+/**
+ * renderer user avatar in the card
+ * @param {*} tasks 
+ * @returns {string}
+ */
+function rendererEditAvatar(tasks) {
+    let initials = tasks.name.split(' ').map(name => name.charAt(0).toUpperCase()).join('');
+    return `&lt;span class="avatar" style="background-color: ${tasks.bgcolor}; margin-left: -18px;">${initials}&lt;/span>`;
+}
+
+
+/**
+ * rederer big card in the board
+ * @param {*} task 
+ * @returns {string}
+ */
+function renderCardOverlay(task) {
+    let prio = task[0].prio.toLowerCase();
+    let taskCategory = task[0].cat.replace(/\s/g, '').toLowerCase();
+    let bigCard = `&lt;div class="edit-card" onclick="event.stopPropagation()">
+                    &lt;div class="edit-header d-flex-sb-c">
+                        &lt;div class="${taskCategory}-header">
+                            ${task[0].cat}
+                        &lt;/div>
+                        &lt;div class="btn d-flex-c-c" onclick="event.stopPropagation(); closeEditOverlay()">
+                            &lt;img src="../assets/icons/close.svg" alt="close">
+                        &lt;/div>
+                    &lt;/div>
+                    &lt;div class="edit-body">
+                        &lt;div class="task-text-bold-edit">
+                                ${task[0].title}
+                        &lt;/div>
+                        &lt;div class="task-text">
+                            &lt;p>${task[0].descr}&lt;p>
+                        &lt;/div>
+                        &lt;div class="d-flex-start-c mh-2">
+                            &lt;p class="w-100">Due date:&lt;/p>
+                            &lt;p>${task[0].date}&lt;/p>
+                        &lt;/div>
+                        &lt;div class="d-flex-start-c mh-2">
+                            &lt;p class="w-100">Priority:&lt;/p>
+                            &lt;div class="d-flex-sb-c">
+                                &lt;p>${task[0].prio}&lt;/p>
+                                &lt;img src="../assets/icons/${prio}.svg" alt="">
+                            &lt;/div>
+                        &lt;/div>
+                        &lt;div>
+                            &lt;p>Assigned To:&lt;/p>
+                            &lt;div class="mh-5">`
+    bigCard += renderAvatarBigCard(task[0].user);
+    bigCard += `&lt;/div>
+                    &lt;/div>
+                    &lt;div >`
+    bigCard += renderSubtaskBigCard(task[0], task[0].subtasks);
+    bigCard += `
+                    &lt;/div>&lt;/div>
+                &lt;div class="d-flex-end-c mt-5">
+                    &lt;div class="d-flex-c-c btn-div gap-2" id="subtask-btn${task[0].firebaseId}">
+                        &lt;img onclick="editTask('${task[0].firebaseId}')" class="sub-btn" src="../assets/icons/edit.svg" alt="edit"/>
+                        &lt;div class="divider-sub-input">&lt;/div>
+                        &lt;img onclick="deleteTask('${task[0].firebaseId}')" class="sub-btn" src="../assets/icons/delete.svg" alt="delete"/>
+                    &lt;/div>
+                &lt;/div>
+
+            &lt;/div>`
+    return bigCard;
+}
+
+
+/**
+ * renderer for the avatar in the big card
+ * @param {*} taskAvatars
+ * @returns {string}
+ */
+function renderAvatarBigCard(taskAvatars) {
+    if (!taskAvatars || taskAvatars.length === 0) return '';
+    let avatar = "";
+    for (let i = 0; i &lt; taskAvatars.length; i++) {
+        let initials = taskAvatars[i].name.split(' ').map(name => name.charAt(0).toUpperCase()).join('');
+        let capitalizedName = taskAvatars[i].name.split(' ').map(name => name.charAt(0).toUpperCase() + name.slice(1)).join(' ');
+        avatar += `&lt;div class="d-flex-start-c gap-20 mh-15">
+                    &lt;span class="avatar-card ml-20" style="background-color: ${taskAvatars[i].bgcolor};">${initials}&lt;/span>
+                    &lt;p class="ml-20">${capitalizedName}&lt;/p>
+                &lt;/div>`
+    }
+    return avatar;
+    
+}
+
+
+/**
+ * renderer for the subtask in the big card
+ * @param {*} task 
+ * @param {*} subtasks 
+ * @returns {string}
+ */
+function renderSubtaskBigCard(task, subtasks) {
+    if (!subtasks || subtasks.length === 0) return '';
+    let subtask = "";
+    
+    subtask += `&lt;p>Subtasks&lt;/p>&lt;div class="mh-5">`;
+    for (let i = 0; i &lt; subtasks.length; i++) {
+        if (subtasks[i].completed == true) {
+            subtask += `&lt;div class="d-flex-start-c subtask-card">
+                    &lt;img class="btn" src="../assets/icons/checkbox-checked.svg" alt="" onclick="toggleSubtask('${task.firebaseId}',${subtasks[i].completed}, ${i})">
+                    &lt;p>${subtasks[i].title}&lt;/p>
+                &lt;/div>`
+        } else {
+            subtask += `&lt;div class="d-flex-start-c subtask-card">
+                    &lt;img class="btn" src="../assets/icons/checkbox-disabled.svg" alt="" onclick="toggleSubtask('${task.firebaseId}',${subtasks[i].completed}, ${i})">
+                    &lt;p>${subtasks[i].title}&lt;/p>
+                &lt;/div>`
+        }
+    }
+    subtask += `&lt;/div>`;
+    return subtask;
+}
+
+
+/**
+ * renderer for the add task overlay
+ * @returns {string}
+ */
+function renderEditOverlay() {
+    return `&lt;div class="main-content" onclick="event.stopPropagation(); closeDropdown();">
+        &lt;div class="d-flex-end-c btn" onclick="closeEditOverlay()">
+            &lt;img src="../assets/icons/close.svg" alt="close">
+        &lt;/div>
+        &lt;section class="task-form">
+            &lt;div class="form-left">
+                &lt;p>Title&lt;/p>
+                &lt;div>
+                    &lt;input class="input-text" type="text" id="title" name="title" placeholder="Enter a title">
+                    &lt;div class="error-message" id="error-div-title"> &lt;/div>
+                &lt;/div>
+
+                &lt;p>Description&lt;/p>
+                &lt;textarea id="description" name="description" placeholder="Enter a Description">&lt;/textarea>
+
+                &lt;p>Assigned to&lt;/p>
+                &lt;div class="dropdown" id="assigned-to">
+                    &lt;div class="dropdown-header" onclick="event.stopPropagation(); toggleDropdown()">
+                        &lt;span id="dropdown-selected">Select contacts to assign&lt;/span>
+                        &lt;span class="dropdown-arrow" id="dropdown-arrow">
+                            &lt;img src="../assets/icons/arrow-dropdown.svg">
+                        &lt;/span>
+                    &lt;/div>
+                    &lt;div class="dropdown-options" id="dropdown-options" onclick="event.stopPropagation();">
+                    &lt;/div>
+                &lt;/div>
+                &lt;div id="avatar-container" style="margin-left: 14px;" class="d-flex-start-c">
+                    
+                &lt;/div>
+            &lt;/div>
+
+            &lt;div class="divider_mid">&lt;/div>
+
+            &lt;div class="form-right">
+                &lt;p>Date&lt;/p>
+                &lt;div>
+                    &lt;div class="input-date-container">
+                        &lt;input class="input-text" type="date" id="due-date" name="due_date" onchange="handleEditDate(this)">
+                        &lt;div class="calendar-icon" onclick="showPicker()">&lt;/div>
+                    &lt;/div>
+                    &lt;div class="error-message" id="error-div-due-date"> &lt;/div>
+                &lt;/div>
+                &lt;p>Prio&lt;/p>
+                &lt;div class="priority">
+                    &lt;button type="button" class="prio urgent" id="urgent" onclick="selectEditPriority('urgent')">
+                        &lt;p>Urgent&lt;/p>
+                        &lt;img id="urgent-img" src="../assets/icons/urgent.svg">
+                    &lt;/button>
+                    &lt;button type="button" class="prio medium selected" id="medium" onclick="selectEditPriority('medium')">
+                        &lt;p>Medium&lt;/p>
+                        &lt;img id="medium-img" src="../assets/icons/medium.svg">
+                    &lt;/button>
+                    &lt;button type="button" class="prio low" id="low" onclick="selectEditPriority('low')">
+                        &lt;p>Low&lt;/p>
+                        &lt;img id="low-img" src="../assets/icons/low.svg">
+                    &lt;/button>
+                &lt;/div>
+
+                &lt;p>Category&lt;/p>
+                &lt;div>
+                    &lt;div class="dropdown" id="category">
+                        &lt;div class="dropdown-header" onclick="event.stopPropagation(); toggleCategoryDropdown();">
+                            &lt;span id="dropdown-cat-selected">Select task category&lt;/span>
+                            &lt;span class="dropdown-arrow-cat" id="dropdown-cat-arrow">
+                                &lt;img src="../assets/icons/arrow-dropdown.svg">
+                            &lt;/span>
+                        &lt;/div>
+                        &lt;div class="dropdown-options" id="dropdown-cat-options" onclick="event.stopPropagation();">
+                            &lt;div class="dropdown-item btn" onclick="selectEditCategory('Technical Task')">
+                                &lt;p>Technical Task&lt;/p>
+                            &lt;/div>
+                            &lt;div class="dropdown-item btn" onclick="selectEditCategory('User Story')">
+                                &lt;p>User Story&lt;/p>
+                            &lt;/div>
+                        &lt;/div>
+                    &lt;/div>
+                    &lt;div class="error-message" id="error-div-category"> &lt;/div>
+                &lt;/div>
+
+                &lt;p>Subtasks&lt;/p>
+                &lt;div class="subtasks">
+                    &lt;div class="subtask-input-container">
+                        &lt;input id="subtask-input" maxlength="100" class="input-text" placeholder="Add new subtask" onfocus="focusSubtask()"/>
+                        &lt;div id="new-subtask" onclick="newSubtask(this)">
+                            &lt;img src="../assets/icons/add.svg" alt="plus_icon"/>
+                        &lt;/div>                        
+                        &lt;div id="close-check" class="btn-div-sub d-none">
+                            &lt;img onclick="closeSubtask()" class="sub-btn" src="../assets/icons/close.svg" alt="close"/>
+                            &lt;div class="divider-input">&lt;/div>
+                            &lt;img onclick="addEditSubtask()" class="sub-btn" src="../assets/icons/check.svg" alt="check"/>
+                        &lt;/div>
+                    &lt;/div>
+                    &lt;div id="messages-container" class="messages-container">
+                    
+                    &lt;/div>
+                &lt;/div>
+            &lt;/div>
+        &lt;/section>
+        &lt;div class="form-actions">
+            &lt;div class="required-message">
+                &lt;p>&lt;span class="required">*&lt;/span>This field is required&lt;/p>
+            &lt;/div>
+            &lt;div>
+                &lt;button class="btn-create btn-cre-cle" onclick="clickUpdateTask()">OK ✔&lt;/button>
+            &lt;/div>
+        &lt;/div>
+    &lt;/div>`
+}
+
+
+/**
+ * renderer user-dropdown for the add-task overlay
+ * @param {*} assigned
+ * @param {*} selectedUser
+ * @returns {string}
+ */
+function renderEditAssignedUser(assigned, selectedUser) {
+    let initials = assigned.name.split(' ').map(name => name.charAt(0).toUpperCase()).join('');
+    let capitalizedUserName = assigned.name.split(' ').map(name => name.charAt(0).toUpperCase() + name.slice(1)).join(' ');
+    if (!selectedUser) {
+        return `                        
+            &lt;div class="dropdown-item">
+                &lt;span class="avatar color" style="background-color: ${assigned.color}">${initials}&lt;/span>
+                &lt;p>${capitalizedUserName}&lt;/p>
+                &lt;input class="icon btn" type="checkbox" id="${assigned.id}" name="assigned_to" onclick="toggleEditAvatar(${assigned.id}, this)">
+            &lt;/div>
+        `;
+    } else {
+        let isChecked = selectedUser.some(user => user.id === assigned.id);
+        return `                        
+            &lt;div class="dropdown-item">
+                &lt;span class="avatar color" style="background-color: ${assigned.color}">${initials}&lt;/span>
+                &lt;p>${capitalizedUserName}&lt;/p>
+                &lt;input class="icon btn" type="checkbox" id="${assigned.id}" name="assigned_to" ${isChecked ? 'checked' : ''} onclick="toggleEditAvatar(${assigned.id}, this)">
+            &lt;/div>
+        `;
+    }
+}
+
+
+/**
+ * renderer the assigned user in the add-task overlay  
+ * @param {*} taskuser 
+ * @returns {string}
+ */
+async function rendererTaskAvatar(taskuser) {
+    let initials = taskuser.name.split(' ').map(word => word.charAt(0).toUpperCase()).join('');
+    return `&lt;span class="avatar-edit-card" style="background-color:${taskuser.bgcolor}">
+                ${initials}
+            &lt;/span>`;
+    
+}
+
+
+/**
+ * render Task user
+ * @returns {string}
+ */
+async function renderTaskAvatar(task) {
+    let avatarContainer = document.getElementById("avatar-container");
+    avatarContainer.innerHTML = "";
+    if (!task.user || task.user.length == 0) return
+    if(task.user.length > 6) {
+        for (let i=0; i &lt;  6 ; i++) {
+            avatarContainer.innerHTML += await rendererTaskAvatar(task.user[i])
+        }
+        let overflowValue = task.user.length - 6;
+        avatarContainer.innerHTML +=  `&lt;span class="avatar-overflow" style="background-color: #505050">${overflowValue}&lt;img src="../assets/icons/add-white.svg">&lt;span>`
+    }else if (task.user.length > 0){
+        let userLength = task.user.length;
+        for (let i=0; i &lt; userLength; i++) {
+            avatarContainer.innerHTML += await rendererTaskAvatar(task.user[i])
+        }
+    }
+}
+
+
+/**
+ * renderer the subtask in the add-task overlay
+ * @param {*} id 
+ * @param {*} task 
+ * @returns {string}
+ */
+function renderEditSubtasks(id, task) {
+    return `&lt;div class="validation" id="validation-messages-div-${id}" >
+                        &lt;div class="d-flex-sb-c validation-messages" onmouseover="handleHover(${id}, this)" onmouseout="handleHoverEnd(${id}, this)">
+                            &lt;p class="validation-msg">• ${task.subtasks[id].title}&lt;/p>
+                            &lt;div class="btn-div-sub gap-2 d-none" id="subtask-btn-${id}">
+                                &lt;img onclick="editEditSubtask(${id})" class="sub-btn" src="../assets/icons/edit.svg" alt="edit"/>
+                                &lt;div class="divider-sub-input">&lt;/div>
+                                &lt;img onclick="delEditSubtask(${id})" class="sub-btn" src="../assets/icons/delete.svg" alt="delete"/>
+                            &lt;/div>
+                        &lt;/div>
+                    &lt;/div>`
+}
+
+
+/**
+ * renderer the edit subtask in the add-task overlay
+ * @param {*} id 
+ * @returns {string}
+ */
+function renderEditTaskSubtask(id) {
+    return `&lt;input id="edit-input-${id}" maxlength="100" class="edit-input" placeholder="Add new subtask"/>                      
+            &lt;div id="" class="btn-div-sub gap-2 ">
+                &lt;img onclick="delEditSubtask(${id})" class="sub-btn" src="../assets/icons/delete.svg" alt="delete"/>
+                &lt;div class="divider-input">&lt;/div>
+                &lt;img onclick="saveEditTask(${id})" class="sub-btn" src="../assets/icons/check.svg" alt="check"/>
+            &lt;/div>`
+}</code></pre>
+        </article>
+    </section>
+
+
+
+
+</div>
+
+<nav>
+    <h2><a href="index.html">Home</a></h2><h3>Global</h3><ul><li><a href="global.html#addAssignedToTemplate">addAssignedToTemplate</a></li><li><a href="global.html#addContact">addContact</a></li><li><a href="global.html#addEditSubtask">addEditSubtask</a></li><li><a href="global.html#addSubtask">addSubtask</a></li><li><a href="global.html#addTaskTemplate">addTaskTemplate</a></li><li><a href="global.html#allowDrop">allowDrop</a></li><li><a href="global.html#assignedToTemplate">assignedToTemplate</a></li><li><a href="global.html#assignedUsers">assignedUsers</a></li><li><a href="global.html#changeType">changeType</a></li><li><a href="global.html#checkLink">checkLink</a></li><li><a href="global.html#checkLogin">checkLogin</a></li><li><a href="global.html#checkPager">checkPager</a></li><li><a href="global.html#checkUser">checkUser</a></li><li><a href="global.html#clearContactForm">clearContactForm</a></li><li><a href="global.html#clearErrorMessages">clearErrorMessages</a></li><li><a href="global.html#clearForm">clearForm</a></li><li><a href="global.html#clickUpdateTask">clickUpdateTask</a></li><li><a href="global.html#closeContactDetails">closeContactDetails</a></li><li><a href="global.html#closeContactForm">closeContactForm</a></li><li><a href="global.html#closeDropdown">closeDropdown</a></li><li><a href="global.html#closeEditOverlay">closeEditOverlay</a></li><li><a href="global.html#closeFilteredTasks">closeFilteredTasks</a></li><li><a href="global.html#closePopOverlay">closePopOverlay</a></li><li><a href="global.html#closeSubtask">closeSubtask</a></li><li><a href="global.html#container">container</a></li><li><a href="global.html#createNewUser">createNewUser</a></li><li><a href="global.html#createTask">createTask</a></li><li><a href="global.html#createUserContact">createUserContact</a></li><li><a href="global.html#decideCardType">decideCardType</a></li><li><a href="global.html#delEditSubtask">delEditSubtask</a></li><li><a href="global.html#delSubtask">delSubtask</a></li><li><a href="global.html#deleteTask">deleteTask</a></li><li><a href="global.html#deleteUser">deleteUser</a></li><li><a href="global.html#doNotClose">doNotClose</a></li><li><a href="global.html#editContact">editContact</a></li><li><a href="global.html#editEditSubtask">editEditSubtask</a></li><li><a href="global.html#editSubtask">editSubtask</a></li><li><a href="global.html#editTask">editTask</a></li><li><a href="global.html#fetchNewType">fetchNewType</a></li><li><a href="global.html#filterTasks">filterTasks</a></li><li><a href="global.html#focusSubtask">focusSubtask</a></li><li><a href="global.html#generateGreets">generateGreets</a></li><li><a href="global.html#generateInitials">generateInitials</a></li><li><a href="global.html#getAddTask">getAddTask</a></li><li><a href="global.html#getAssignedUsers">getAssignedUsers</a></li><li><a href="global.html#getGreeting">getGreeting</a></li><li><a href="global.html#getRandomColor">getRandomColor</a></li><li><a href="global.html#goBack">goBack</a></li><li><a href="global.html#goToBoard">goToBoard</a></li><li><a href="global.html#goToSignUp">goToSignUp</a></li><li><a href="global.html#guestLogin">guestLogin</a></li><li><a href="global.html#handleDate">handleDate</a></li><li><a href="global.html#handleDrag">handleDrag</a></li><li><a href="global.html#handleDragEnd">handleDragEnd</a></li><li><a href="global.html#handleDragLeave">handleDragLeave</a></li><li><a href="global.html#handleDragOver">handleDragOver</a></li><li><a href="global.html#handleDrop">handleDrop</a></li><li><a href="global.html#handleEditDate">handleEditDate</a></li><li><a href="global.html#handleHover">handleHover</a></li><li><a href="global.html#handleHoverEnd">handleHoverEnd</a></li><li><a href="global.html#hiddenImg">hiddenImg</a></li><li><a href="global.html#hiddenSuccessMsgTasks">hiddenSuccessMsgTasks</a></li><li><a href="global.html#hidePassword">hidePassword</a></li><li><a href="global.html#includeHTML">includeHTML</a></li><li><a href="global.html#init">init</a></li><li><a href="global.html#initAddTask">initAddTask</a></li><li><a href="global.html#initBoard">initBoard</a></li><li><a href="global.html#initContacts">initContacts</a></li><li><a href="global.html#initHeader">initHeader</a></li><li><a href="global.html#initHelp">initHelp</a></li><li><a href="global.html#initLegalNotice">initLegalNotice</a></li><li><a href="global.html#initLogin">initLogin</a></li><li><a href="global.html#initNav">initNav</a></li><li><a href="global.html#initPrivacyPolicy">initPrivacyPolicy</a></li><li><a href="global.html#initProfilePopUp">initProfilePopUp</a></li><li><a href="global.html#initSummary">initSummary</a></li><li><a href="global.html#isExistingUser">isExistingUser</a></li><li><a href="global.html#lastValidate">lastValidate</a></li><li><a href="global.html#loadFilteredTasks">loadFilteredTasks</a></li><li><a href="global.html#loadProfile">loadProfile</a></li><li><a href="global.html#loadRenderCard">loadRenderCard</a></li><li><a href="global.html#loadRenderContactList">loadRenderContactList</a></li><li><a href="global.html#loadTaskInEditCard">loadTaskInEditCard</a></li><li><a href="global.html#loadUrgentTasks">loadUrgentTasks</a></li><li><a href="global.html#loadUserCounter">loadUserCounter</a></li><li><a href="global.html#loadUsers">loadUsers</a></li><li><a href="global.html#loadingNumbers">loadingNumbers</a></li><li><a href="global.html#loadingPasswordIcons">loadingPasswordIcons</a></li><li><a href="global.html#loadingSignUsers">loadingSignUsers</a></li><li><a href="global.html#loadingTasks">loadingTasks</a></li><li><a href="global.html#loadingUsers">loadingUsers</a></li><li><a href="global.html#lockImg">lockImg</a></li><li><a href="global.html#logOut">logOut</a></li><li><a href="global.html#newSubtask">newSubtask</a></li><li><a href="global.html#notLogin">notLogin</a></li><li><a href="global.html#postData">postData</a></li><li><a href="global.html#postUser">postUser</a></li><li><a href="global.html#putUsercount">putUsercount</a></li><li><a href="global.html#reUpdateUser">reUpdateUser</a></li><li><a href="global.html#removeEditDel">removeEditDel</a></li><li><a href="global.html#removeOverlay">removeOverlay</a></li><li><a href="global.html#renderArrow">renderArrow</a></li><li><a href="global.html#renderAssignedUser">renderAssignedUser</a></li><li><a href="global.html#renderAvatar">renderAvatar</a></li><li><a href="global.html#renderAvatarBigCard">renderAvatarBigCard</a></li><li><a href="global.html#renderCardOverlay">renderCardOverlay</a></li><li><a href="global.html#renderContactDetails">renderContactDetails</a></li><li><a href="global.html#renderContactList">renderContactList</a></li><li><a href="global.html#renderContactListItem">renderContactListItem</a></li><li><a href="global.html#renderEditAssignedUser">renderEditAssignedUser</a></li><li><a href="global.html#renderEditAvatar">renderEditAvatar</a></li><li><a href="global.html#renderEditContact">renderEditContact</a></li><li><a href="global.html#renderEditDeletePopup">renderEditDeletePopup</a></li><li><a href="global.html#renderEditOverlay">renderEditOverlay</a></li><li><a href="global.html#renderEditSubtask">renderEditSubtask</a></li><li><a href="global.html#renderEditSubtasks">renderEditSubtasks</a></li><li><a href="global.html#renderEditTaskSubtask">renderEditTaskSubtask</a></li><li><a href="global.html#renderFilteredTasks">renderFilteredTasks</a></li><li><a href="global.html#renderNewContact">renderNewContact</a></li><li><a href="global.html#renderNoTask">renderNoTask</a></li><li><a href="global.html#renderNoTaskCard">renderNoTaskCard</a></li><li><a href="global.html#renderNotFindTask">renderNotFindTask</a></li><li><a href="global.html#renderSubtaskBigCard">renderSubtaskBigCard</a></li><li><a href="global.html#renderSubtasks">renderSubtasks</a></li><li><a href="global.html#renderTaskAvatar">renderTaskAvatar</a></li><li><a href="global.html#renderTaskCard">renderTaskCard</a></li><li><a href="global.html#renderTasks">renderTasks</a></li><li><a href="global.html#rendererAvatar">rendererAvatar</a></li><li><a href="global.html#rendererEditAvatar">rendererEditAvatar</a></li><li><a href="global.html#rendererTaskAvatar">rendererTaskAvatar</a></li><li><a href="global.html#saveCurrentUser">saveCurrentUser</a></li><li><a href="global.html#saveEdit">saveEdit</a></li><li><a href="global.html#saveEditTask">saveEditTask</a></li><li><a href="global.html#selectCategory">selectCategory</a></li><li><a href="global.html#selectEditCategory">selectEditCategory</a></li><li><a href="global.html#selectEditPriority">selectEditPriority</a></li><li><a href="global.html#selectPriority">selectPriority</a></li><li><a href="global.html#showAddTaskDetails">showAddTaskDetails</a></li><li><a href="global.html#showBoardTasks">showBoardTasks</a></li><li><a href="global.html#showContactDetails">showContactDetails</a></li><li><a href="global.html#showEditTask">showEditTask</a></li><li><a href="global.html#showError">showError</a></li><li><a href="global.html#showPassword">showPassword</a></li><li><a href="global.html#showPicker">showPicker</a></li><li><a href="global.html#showSuccessMsgTasks">showSuccessMsgTasks</a></li><li><a href="global.html#signUp">signUp</a></li><li><a href="global.html#sortUrgentTask">sortUrgentTask</a></li><li><a href="global.html#subValidate">subValidate</a></li><li><a href="global.html#subtaskCal">subtaskCal</a></li><li><a href="global.html#textTrimmer">textTrimmer</a></li><li><a href="global.html#toggleAvatar">toggleAvatar</a></li><li><a href="global.html#toggleCategoryDropdown">toggleCategoryDropdown</a></li><li><a href="global.html#toggleDropdown">toggleDropdown</a></li><li><a href="global.html#toggleEditAvatar">toggleEditAvatar</a></li><li><a href="global.html#toggleEditDeletePopup">toggleEditDeletePopup</a></li><li><a href="global.html#togglePopUp">togglePopUp</a></li><li><a href="global.html#toggleRememberMeBtn">toggleRememberMeBtn</a></li><li><a href="global.html#toggleSubtask">toggleSubtask</a></li><li><a href="global.html#updateSubtask">updateSubtask</a></li><li><a href="global.html#updateSubtaskDisplay">updateSubtaskDisplay</a></li><li><a href="global.html#updateTask">updateTask</a></li><li><a href="global.html#updateUser">updateUser</a></li><li><a href="global.html#validateCat">validateCat</a></li><li><a href="global.html#validateContactForm">validateContactForm</a></li><li><a href="global.html#validateDate">validateDate</a></li><li><a href="global.html#validateEmail">validateEmail</a></li><li><a href="global.html#validateFunction">validateFunction</a></li><li><a href="global.html#validateName">validateName</a></li><li><a href="global.html#validatePassword">validatePassword</a></li><li><a href="global.html#validatePhone">validatePhone</a></li><li><a href="global.html#validateSignUpForm">validateSignUpForm</a></li><li><a href="global.html#validateUser">validateUser</a></li><li><a href="global.html#writeNumber">writeNumber</a></li></ul>
+</nav>
+
+<br class="clear">
+
+<footer>
+    Documentation generated by <a href="https://github.com/jsdoc/jsdoc">JSDoc 4.0.4</a> on Fri Jun 27 2025 13:31:40 GMT+0200 (Mitteleuropäische Sommerzeit)
+</footer>
+
+<script> prettyPrint(); </script>
+<script src="scripts/linenumber.js"> </script>
+</body>
+</html>

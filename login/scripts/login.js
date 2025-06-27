@@ -41,7 +41,7 @@ function loadingPasswordIcons() {
 /**
  * check login status
  * @param {*} sessionUser 
- * @returns 
+ * @returns {*}
  */
 function checkPager(sessionUser) {
     if ((sessionUser)) {
@@ -90,7 +90,7 @@ async function checkUser() {
  * @param {*} resultDiv 
  * @param {*} emailInput 
  * @param {*} passwordInput 
- * @returns 
+ * @returns {*}
  */
 async function loadUsers(resultDiv,emailInput,passwordInput) {
     let users;

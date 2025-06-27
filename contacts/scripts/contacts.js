@@ -32,7 +32,7 @@ function toggleDropdown() {
 /**
  * check login status
  * @param {*} sessionUser 
- * @returns 
+ * @returns {boolean}
  */
 function checkPager(sessionUser) {
     if (!sessionUser) {
@@ -121,7 +121,7 @@ function closeContactForm() {
 /**
  * show the contact details.
  * @param {*} userId 
- * @returns 
+ * @returns {boolean}
  */
 function showContactDetails(userId) {
     try {
@@ -191,7 +191,7 @@ async function loadUserCounter() {
 
 /**
  * create the new contact
- * @returns 
+ * @returns {Promise}
  */
 async function createUserContact() {
     try {
@@ -229,7 +229,7 @@ async function createUserContact() {
  * update the counter
  * @param {*} path 
  * @param {*} data 
- * @returns 
+ * @returns {Promise}
  */
 async function putUsercount(path = "", data = "") {
     let response = await fetch(BASE_URL + path + ".json", {
@@ -247,7 +247,7 @@ async function putUsercount(path = "", data = "") {
  * post the new contact
  * @param {*} path 
  * @param {*} data 
- * @returns 
+ * @returns {*}
  */
 async function postUser(path = "", data = "") {
     let response = await fetch(BASE_URL + path + ".json", {
@@ -295,7 +295,7 @@ function editContact(user) {
 /**
  * update the contact
  * @param {*} user 
- * @returns 
+ * @returns {boolean}
  */
 async function updateUser(user) {
     try {
@@ -335,7 +335,7 @@ async function reUpdateUser(updatedData) {
 
 /**
  * validate the contact form
- * @returns 
+ * @returns {boolean}
  */
 function validateContactForm() {
     let name = document.getElementById('name').value;
@@ -362,7 +362,7 @@ function validateContactForm() {
 /**
  * function for the validation of the name
  * @param {*} name 
- * @returns 
+ * @returns {boolean}
  */
 function validateName(name) {
     return name.trim().length >= 2;
@@ -372,7 +372,7 @@ function validateName(name) {
 /**
  * function for the validation of the email
  * @param {*} email 
- * @returns 
+ * @returns {boolean}
  */
 function validateEmail(email) {
     const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
@@ -383,7 +383,7 @@ function validateEmail(email) {
 /**
  * function for the validation of the phone
  * @param {*} phone 
- * @returns 
+ * @returns {boolean}
  */
 function validatePhone(phone) {
     const phoneRegex = /^[\d\s\+\-\(\)]{6,}$/;

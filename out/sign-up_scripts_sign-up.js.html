@@ -2,7 +2,7 @@
 <html lang="en">
 <head>
     <meta charset="utf-8">
-    <title>JSDoc: Source: script.js</title>
+    <title>JSDoc: Source: sign-up/scripts/sign-up.js</title>
 
     <script src="scripts/prettify/prettify.js"> </script>
     <script src="scripts/prettify/lang-css.js"> </script>
@@ -17,7 +17,7 @@
 
 <div id="main">
 
-    <h1 class="page-title">Source: script.js</h1>
+    <h1 class="page-title">Source: sign-up/scripts/sign-up.js</h1>
 
     
 
@@ -26,118 +26,294 @@
     
     <section>
         <article>
-            <pre class="prettyprint source linenums"><code>const BASE_URL ="https://join-b1b53-default-rtdb.europe-west1.firebasedatabase.app";
+            <pre class="prettyprint source linenums"><code>let pass1 = document.getElementById("password-input-1");
+let pass2 = document.getElementById("password-input-2");
+let errorMsg = document.getElementById("false"); 
+let signUpBtn = document.getElementById("signUpBtn");
+let usercount;
+let userArray = []
 
 /**
- * go back to the last page
+ * init function for sign up page
  */
-function goBack() {
-  window.history.back();
+async function init() {
+    await checkLogin();
+    await loadUserCounter();
 }
 
 
 /**
- * load nav and header
+ * load user counter for datebase
  */
-function includeHTML() {
-  let navigation = document.getElementById("navigation-container");
-  navigation.innerHTML = initNav();
-  let header = document.getElementById("header-container");
-  header.innerHTML = initHeader();
-  let popUp = document.getElementById("overlay-container");
-  popUp.innerHTML = initProfilePopUp();
+async function loadUserCounter() {
+    let response = await fetch(BASE_URL + "/usercount/.json");
+    let responseToJson = await response.json();  
+    usercount = responseToJson;
 }
 
 
 /**
- * check the login status
+ * check login status
+ * @param {*} sessionUser 
+ * @returns {*}
  */
-function checkLogin() {
-  const isLoginPage = window.location.pathname.includes("join/login/login.html");
-  const sessionUser = sessionStorage.getItem("username");
-  const localUser = localStorage.getItem("username");
-
-  // Wenn Remember-Me aktiv (localUser vorhanden)
-  if (localUser &amp;&amp; !sessionUser) {
-    sessionStorage.setItem("username", localUser);
-    sessionStorage.setItem("email", localStorage.getItem("email"));
-  }
-
-  checkPager(sessionUser);
-}
-
-
-/**
- * Generate initials for the top right corner in the header section.
- */
-function generateInitials() {
-  let content = document.getElementById("profile");
-
-  let userName = sessionStorage.getItem("username");
-  content.innerHTML = "";
-  let nameParts = userName.split(" ");
-  if (nameParts.length >= 2) {
-    let initials = (nameParts[0][0] + nameParts[1][0]).toUpperCase();
-    content.innerHTML = initials;
-  } else if (nameParts.length === 1) {
-    let initials = nameParts[0][0].toUpperCase();
-    content.innerHTML = initials;
-  } else {
-    content.innerHTML = "G";
-  }
-}
-
-
-/**
- * random color function for the profile section
- * @returns {string}
- */
-function getRandomColor() {
-  const r = Math.floor(Math.random() * 256);
-  const g = Math.floor(Math.random() * 256);
-  const b = Math.floor(Math.random() * 256);
-  return `#${r.toString(16).padStart(2, '0')}${g.toString(16).padStart(2, '0')}${b.toString(16).padStart(2, '0')}`;
-}
-
-
-/**
- * check link function to highlight the active link in the sidebar
- */
-function checkLink() {
-  const currentPath = window.location.pathname;
-  const sidebarLinks = document.querySelectorAll('#navigation-container .aside-nav a');
-  sidebarLinks.forEach(link => {
-    link.classList.remove('active');
-    let href = link.getAttribute('href').replace('../', '');
-    if (currentPath.includes(href)) {
-      link.classList.add('active');
-    } else {
-      link.classList.remove('active');
+function checkPager(sessionUser) {    
+    const isSignUp = window.location.pathname.includes("join/sign-up/sign-up.html");
+    if ((sessionUser &amp;&amp; isSignUp)) {
+        window.location.href = "../summary/summary.html";
+        return;
     }
-  });
 }
 
 
 /**
- * not logged in function to hide the sidebar and profile section
+ * event listener for sign up button
  */
-function notLogin() {
-  let sidebar = document.getElementById('navigation-container');
-  let profile = document.getElementById('profile');
-  let info = document.getElementById('info');
-  let asideNav = document.getElementById('aside-nav');
-  if (sessionStorage.getItem("username") == null) {
-    sidebar.classList.add('no-login-sidebar-none');
-    profile.classList.add('no-login-none');
-    info.classList.add('no-login-none');
-    asideNav.classList.add('no-login-none');
-  } else {
-    sidebar.classList.remove('no-login-sidebar-none');
-    profile.classList.remove('no-login-none');
-    info.classList.remove('no-login-none');
-    asideNav.classList.remove('no-login-none');
-    generateInitials();
-  }
+document.getElementById("login-form-container").addEventListener("submit", async function (event){
+    event.preventDefault();
+})
+
+
+/**
+ * start the sign up process
+ */
+function signUp() {
+    validateSignUpForm();    
+}
+
+
+/**
+ * update the user counter
+ *
+ * @param {*} path 
+ * @param {*} data 
+ * @returns {*}
+ */
+async function putUsercount(path="", data="") { // Anlegen von Daten 
+    let response = await fetch(BASE_URL + path + ".json",{
+        method: "PUT",
+        headers: {
+            "Content-Type": "application/json",
+        },
+        body: JSON.stringify(data)
+    });
+    
+    return responseToJson = await response.json();
+}
+
+
+/**
+ * create new user in database
+ * @param {*} path 
+ * @param {*} data 
+ * @returns {*}
+ */
+async function postData(path="", data="") { // Anlegen von Daten 
+    let response = await fetch(BASE_URL + path + ".json",{
+        method: "POST",
+        headers: {
+            "Content-Type": "application/json",
+        },
+        body: JSON.stringify(data)
+    });
+    
+    return responseToJson = await response.json();
+}
+
+
+/**
+ * info banner for successful sign up
+ * @param {*} name 
+ * @param {*} email 
+ */
+function showSuccessMsgTasks(name,email) {
+    let overlayDiv = document.getElementById('overlay-successfull');
+    overlayDiv.classList.add('overlay-suess-contact');
+    sessionStorage.setItem('username', name);
+    sessionStorage.setItem('email', email);
+    setInterval(()=> {
+        window.location.href = '../summary/summary.html';
+    }, 800);
+}
+
+
+/**
+ * load user from database
+ * @param {*} name 
+ * @param {*} email 
+ * @param {*} password1 
+ * @returns {boolean}
+ */
+async function loadingSignUsers(name, email, password1) {
+    try {
+        const response = await fetch(BASE_URL + "/users/.json");
+        const users = await response.json(); 
+        let existingUser = null;
+        for (let key in users) {
+            if (users[key].email === email) {
+                existingUser = { key, ...users[key] };
+                break;
+            }
+        }
+        await isExistingUser(existingUser, name, email, password1);
+        return true;
+    } catch (error) {
+        console.error('Fehler:', error);
+        return false;
+    }
+}
+
+
+/**
+ * existing user check
+ * @param {*} existingUser 
+ * @param {*} name 
+ * @param {*} email 
+ * @param {*} password1 
+ * @returns {boolean}
+ */
+async function isExistingUser(existingUser, name, email, password1) {
+    if (existingUser) {
+        showError('Email is already registered');
+        return false;
+    } else {
+        await createNewUser(name, email, password1);
+        return true;
+    }
+}
+
+
+/**
+ * clear error messages
+ */
+function clearErrorMessages() {
+    const errorDiv = document.querySelectorAll('.error-message');
+    errorDiv.forEach(error => {
+        error.classList.add('d-none');
+    });
+}
+
+
+/**
+ * show error message
+ * @param {*} message 
+ */
+function showError(div, message) {
+    const errorDiv = document.getElementById('error-div-'+ div);
+    if (errorDiv !== null) {
+        errorDiv.classList.remove('d-none');
+        errorDiv.textContent = message;
+    }
+}
+
+
+/**
+ * validate sign up form
+ * @returns {boolean}
+ */
+async function validateSignUpForm() {
+    let name = document.getElementById('name-input').value;
+    let email = document.getElementById('email-input').value;
+    let password1 = document.getElementById('password-input-1').value;
+    let password2 = document.getElementById('password-input-2').value;
+    const checkbox = document.getElementById('privacy-checkbox');
+    const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+    clearErrorMessages();
+
+    if(validateFunction(name, email, password1, password2, checkbox, emailRegex)) {
+        try {
+            if(await loadingSignUsers(name, email, password1)) {
+                showSuccessMsgTasks(name, email);
+            }
+        } catch (error) {
+            return false;
+        }
+    }
+}
+
+
+/**
+ * update user in database
+ * @param {*} key 
+ * @param {*} password 
+ * @param {*} name 
+ */
+async function updateUser(key, password, name) {
+    await fetch(BASE_URL + `/users/${key}/.json`, {
+        method: 'PATCH',
+        body: JSON.stringify({ 
+            password: password,
+            name: name
+        })
+    });
+}
+
+
+/**
+ * create the new user
+ * @param {*} name 
+ * @param {*} email 
+ * @param {*} password 
+ */
+async function createNewUser(name, email, password) {
+    let color = getRandomColor();
+    await postData(`/users/`, {"name": name, "email": email, "password": password, "id": usercount + 1,"phone": "", "color": `${color}`});
+    usercount++;
+    await putUsercount(`/usercount/`, usercount); 
+}
+
+
+/**
+ * validate sign up form
+ * @param {*} name 
+ * @param {*} email 
+ * @param {*} password1 
+ * @param {*} password2 
+ * @param {*} checkbox 
+ * @param {*} emailRegex 
+ * @returns {boolean}
+ */
+function validateFunction(name, email, password1, password2, checkbox, emailRegex) {
+    if (name.trim().length &lt; 2) {
+        showError('name','Name must be at least 2 characters long');
+        return false;
+    }
+
+    if (!emailRegex.test(email)) {
+        showError('email','Please enter a valid email address');
+        return false;
+    }
+    
+    if (!validatePassword(password1)) {
+        return false;
+    }
+
+    if (password1 !== password2) {
+        showError('pass2','Passwords do not match');
+        return false;
+    }
+
+    if (!checkbox.checked) {
+        showError('check','Please accept the privacy policy');
+        return false;
+    }
+    return true;
+}
+
+
+/**
+ * password validation
+ * @param {*} password 
+ * @returns {boolean}
+ */
+function validatePassword(password) {
+    const passwordRegex = /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)[a-zA-Z\d!@#$%^&amp;*()_+\-=[\]{};':"\\|,.&lt;>/?]{8,}$/;
+    if (!(password.length >= 8) || password.includes(' ')) {
+        showError('pass1','Password must be at least 8 characters long and must not contain spaces');
+        return false;
+    }
+    
+    return true;
 }</code></pre>
         </article>
     </section>

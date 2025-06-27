@@ -1,6 +1,6 @@
 /**
  * renderer for the navbar
- * @returns 
+ * @returns {string}
  */
 function initNav() {
     return `
@@ -68,7 +68,7 @@ function initNav() {
 
 /**
  * renderer for the header
- * @returns 
+ * @returns {string}
  */
 function initHeader() {
     return `
@@ -108,7 +108,7 @@ function initHeader() {
 
 /**
  * renderer for the profile pop up
- * @returns 
+ * @returns {string}
  */
 function initProfilePopUp() {
     return `

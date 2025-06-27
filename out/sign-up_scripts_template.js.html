@@ -1,0 +1,160 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8">
+    <title>JSDoc: Source: sign-up/scripts/template.js</title>
+
+    <script src="scripts/prettify/prettify.js"> </script>
+    <script src="scripts/prettify/lang-css.js"> </script>
+    <!--[if lt IE 9]>
+      <script src="//html5shiv.googlecode.com/svn/trunk/html5.js"></script>
+    <![endif]-->
+    <link type="text/css" rel="stylesheet" href="styles/prettify-tomorrow.css">
+    <link type="text/css" rel="stylesheet" href="styles/jsdoc-default.css">
+</head>
+
+<body>
+
+<div id="main">
+
+    <h1 class="page-title">Source: sign-up/scripts/template.js</h1>
+
+    
+
+
+
+    
+    <section>
+        <article>
+            <pre class="prettyprint source linenums"><code>/**
+ * loading password icons
+ */
+document.addEventListener("DOMContentLoaded", () => {
+    // Alle Passwort-Eingabefelder und ihre zugehörigen Icons abrufen
+    const passwordInputs = document.querySelectorAll(".password-input");
+    const passwordIcons = document.querySelectorAll("#password-icon-1, #password-icon-2");
+
+    // Über jedes Eingabefeld iterieren
+    passwordInputs.forEach((input, index) => {
+        const icon = passwordIcons[index]; // Das zugehörige Icon für das aktuelle Eingabefeld
+
+        // Input-Event für dynamische Änderungen des Icons basierend auf dem Inhalt
+        input.addEventListener("input", () => {
+            if (input.value.trim() !== "") {
+                icon.innerHTML = `
+                    &lt;svg onclick="showPassword(${index})" style="cursor: pointer;" width="25" height="25" viewBox="0 0 25 25" fill="none" xmlns="http://www.w3.org/2000/svg">
+                        &lt;mask id="mask0_69960_5191" style="mask-type:alpha" maskUnits="userSpaceOnUse" x="0" y="0" width="25" height="25">
+                        &lt;rect x="0.144531" y="0.80835" width="24" height="24" fill="#D9D9D9"/>
+                        &lt;/mask>
+                        &lt;g mask="url(#mask0_69960_5191)">
+                        &lt;path d="M16.2443 14.1084L14.7943 12.6584C14.9443 11.8751 14.7193 11.1418 14.1193 10.4584C13.5193 9.77511 12.7443 9.50845 11.7943 9.65845L10.3443 8.20845C10.6277 8.07511 10.9152 7.97511 11.2068 7.90845C11.4985 7.84178 11.811 7.80845 12.1443 7.80845C13.3943 7.80845 14.4568 8.24595 15.3318 9.12095C16.2068 9.99595 16.6443 11.0584 16.6443 12.3084C16.6443 12.6418 16.611 12.9543 16.5443 13.2459C16.4777 13.5376 16.3777 13.8251 16.2443 14.1084ZM19.4443 17.2584L17.9943 15.8584C18.6277 15.3751 19.1902 14.8459 19.6818 14.2709C20.1735 13.6959 20.5943 13.0418 20.9443 12.3084C20.111 10.6251 18.9152 9.28761 17.3568 8.29595C15.7985 7.30428 14.061 6.80845 12.1443 6.80845C11.661 6.80845 11.186 6.84178 10.7193 6.90845C10.2527 6.97511 9.79434 7.07511 9.34434 7.20845L7.79434 5.65845C8.47767 5.37511 9.17767 5.16261 9.89434 5.02095C10.611 4.87928 11.361 4.80845 12.1443 4.80845C14.5277 4.80845 16.6693 5.43761 18.5693 6.69595C20.4693 7.95428 21.8943 9.59178 22.8443 11.6084C22.8943 11.6918 22.9277 11.7959 22.9443 11.9209C22.961 12.0459 22.9693 12.1751 22.9693 12.3084C22.9693 12.4418 22.9568 12.5709 22.9318 12.6959C22.9068 12.8209 22.8777 12.9251 22.8443 13.0084C22.461 13.8584 21.9818 14.6418 21.4068 15.3584C20.8318 16.0751 20.1777 16.7084 19.4443 17.2584ZM19.2443 22.7084L15.7443 19.2584C15.161 19.4418 14.5735 19.5793 13.9818 19.6709C13.3902 19.7626 12.7777 19.8084 12.1443 19.8084C9.761 19.8084 7.61934 19.1793 5.71934 17.9209C3.81934 16.6626 2.39434 15.0251 1.44434 13.0084C1.39434 12.9251 1.361 12.8209 1.34434 12.6959C1.32767 12.5709 1.31934 12.4418 1.31934 12.3084C1.31934 12.1751 1.32767 12.0501 1.34434 11.9334C1.361 11.8168 1.39434 11.7168 1.44434 11.6334C1.79434 10.8834 2.211 10.1918 2.69434 9.55845C3.17767 8.92511 3.711 8.34178 4.29434 7.80845L2.21934 5.70845C2.036 5.52511 1.94434 5.29595 1.94434 5.02095C1.94434 4.74595 2.04434 4.50845 2.24434 4.30845C2.42767 4.12511 2.661 4.03345 2.94434 4.03345C3.22767 4.03345 3.461 4.12511 3.64434 4.30845L20.6443 21.3084C20.8277 21.4918 20.9235 21.7209 20.9318 21.9959C20.9402 22.2709 20.8443 22.5084 20.6443 22.7084C20.461 22.8918 20.2277 22.9834 19.9443 22.9834C19.661 22.9834 19.4277 22.8918 19.2443 22.7084ZM5.69434 9.20845C5.211 9.64178 4.76934 10.1168 4.36934 10.6334C3.96934 11.1501 3.62767 11.7084 3.34434 12.3084C4.17767 13.9918 5.3735 15.3293 6.93184 16.3209C8.49017 17.3126 10.2277 17.8084 12.1443 17.8084C12.4777 17.8084 12.8027 17.7876 13.1193 17.7459C13.436 17.7043 13.761 17.6584 14.0943 17.6084L13.1943 16.6584C13.011 16.7084 12.836 16.7459 12.6693 16.7709C12.5027 16.7959 12.3277 16.8084 12.1443 16.8084C10.8943 16.8084 9.83184 16.3709 8.95684 15.4959C8.08184 14.6209 7.64434 13.5584 7.64434 12.3084C7.64434 12.1251 7.65684 11.9501 7.68184 11.7834C7.70684 11.6168 7.74434 11.4418 7.79434 11.2584L5.69434 9.20845Z" fill="#A8A8A8"/>
+                        &lt;/g>
+                    &lt;/svg>
+                `;
+            } else {
+                icon.innerHTML = `
+                    &lt;svg style="pointer-events: none;" width="24" height="25" viewBox="0 0 24 25" fill="none" xmlns="http://www.w3.org/2000/svg">
+                        &lt;mask id="mask0_253431_5115" style="mask-type:alpha" maskUnits="userSpaceOnUse" x="0" y="0" width="24" height="25">
+                        &lt;rect y="0.5" width="24" height="24" fill="#D9D9D9"/>
+                        &lt;/mask>
+                        &lt;g mask="url(#mask0_253431_5115)">
+                        &lt;path d="M6 22.5C5.45 22.5 4.97917 22.3042 4.5875 21.9125C4.19583 21.5208 4 21.05 4 20.5V10.5C4 9.95 4.19583 9.47917 4.5875 9.0875C4.97917 8.69583 5.45 8.5 6 8.5H7V6.5C7 5.11667 7.4875 3.9375 8.4625 2.9625C9.4375 1.9875 10.6167 1.5 12 1.5C13.3833 1.5 14.5625 1.9875 15.5375 2.9625C16.5125 3.9375 17 5.11667 17 6.5V8.5H18C18.55 8.5 19.0208 8.69583 19.4125 9.0875C19.8042 9.47917 20 9.95 20 10.5V20.5C20 21.05 19.8042 21.5208 19.4125 21.9125C19.0208 22.3042 18.55 22.5 18 22.5H6ZM6 20.5H18V10.5H6V20.5ZM12 17.5C12.55 17.5 13.0208 17.3042 13.4125 16.9125C13.8042 16.5208 14 16.05 14 15.5C14 14.95 13.8042 14.4792 13.4125 14.0875C13.0208 13.6958 12.55 13.5 12 13.5C11.45 13.5 10.9792 13.6958 10.5875 14.0875C10.1958 14.4792 10 14.95 10 15.5C10 16.05 10.1958 16.5208 10.5875 16.9125C10.9792 17.3042 11.45 17.5 12 17.5ZM9 8.5H15V6.5C15 5.66667 14.7083 4.95833 14.125 4.375C13.5417 3.79167 12.8333 3.5 12 3.5C11.1667 3.5 10.4583 3.79167 9.875 4.375C9.29167 4.95833 9 5.66667 9 6.5V8.5Z" fill="#A8A8A8"/>
+                        &lt;/g>
+                    &lt;/svg>
+                `;
+            }
+        });
+    });
+});
+
+
+/**
+ * show the password
+ * @param {*} currentItem 
+ */
+function showPassword(currentItem) {
+    if (currentItem != 1) {
+        let item = document.getElementById("password-icon-1");
+        item.innerHTML = `
+            &lt;svg onclick="hidePassword(${currentItem})" style="cursor: pointer;" width="25" height="25" viewBox="0 0 25 25" fill="none" xmlns="http://www.w3.org/2000/svg">
+                &lt;mask id="mask0_69960_5197" style="mask-type:alpha" maskUnits="userSpaceOnUse" x="0" y="0" width="25" height="25">
+                &lt;rect x="0.144531" y="0.80835" width="24" height="24" fill="#D9D9D9"/>
+                &lt;/mask>
+                &lt;g mask="url(#mask0_69960_5197)">
+                &lt;path d="M12.1443 16.8083C13.3943 16.8083 14.4568 16.3708 15.3318 15.4958C16.2068 14.6208 16.6443 13.5583 16.6443 12.3083C16.6443 11.0583 16.2068 9.99585 15.3318 9.12085C14.4568 8.24585 13.3943 7.80835 12.1443 7.80835C10.8943 7.80835 9.83184 8.24585 8.95684 9.12085C8.08184 9.99585 7.64434 11.0583 7.64434 12.3083C7.64434 13.5583 8.08184 14.6208 8.95684 15.4958C9.83184 16.3708 10.8943 16.8083 12.1443 16.8083ZM12.1443 15.0083C11.3943 15.0083 10.7568 14.7458 10.2318 14.2208C9.70684 13.6959 9.44434 13.0583 9.44434 12.3083C9.44434 11.5583 9.70684 10.9208 10.2318 10.3958C10.7568 9.87085 11.3943 9.60835 12.1443 9.60835C12.8943 9.60835 13.5318 9.87085 14.0568 10.3958C14.5818 10.9208 14.8443 11.5583 14.8443 12.3083C14.8443 13.0583 14.5818 13.6959 14.0568 14.2208C13.5318 14.7458 12.8943 15.0083 12.1443 15.0083ZM12.1443 19.8083C9.82767 19.8083 7.711 19.1959 5.79434 17.9708C3.87767 16.7458 2.42767 15.0917 1.44434 13.0083C1.39434 12.925 1.361 12.8209 1.34434 12.6958C1.32767 12.5708 1.31934 12.4417 1.31934 12.3083C1.31934 12.175 1.32767 12.0458 1.34434 11.9208C1.361 11.7958 1.39434 11.6917 1.44434 11.6083C2.42767 9.52502 3.87767 7.87085 5.79434 6.64585C7.711 5.42085 9.82767 4.80835 12.1443 4.80835C14.461 4.80835 16.5777 5.42085 18.4943 6.64585C20.411 7.87085 21.861 9.52502 22.8443 11.6083C22.8943 11.6917 22.9277 11.7958 22.9443 11.9208C22.961 12.0458 22.9693 12.175 22.9693 12.3083C22.9693 12.4417 22.961 12.5708 22.9443 12.6958C22.9277 12.8209 22.8943 12.925 22.8443 13.0083C21.861 15.0917 20.411 16.7458 18.4943 17.9708C16.5777 19.1959 14.461 19.8083 12.1443 19.8083ZM12.1443 17.8083C14.0277 17.8083 15.7568 17.3125 17.3318 16.3208C18.9068 15.3292 20.111 13.9917 20.9443 12.3083C20.111 10.625 18.9068 9.28752 17.3318 8.29585C15.7568 7.30418 14.0277 6.80835 12.1443 6.80835C10.261 6.80835 8.53184 7.30418 6.95684 8.29585C5.38184 9.28752 4.17767 10.625 3.34434 12.3083C4.17767 13.9917 5.38184 15.3292 6.95684 16.3208C8.53184 17.3125 10.261 17.8083 12.1443 17.8083Z" fill="#A8A8A8"/>
+                &lt;/g>
+            &lt;/svg>
+        `;
+        document.getElementById("password-input-1").type = "text";
+    } else {
+        let item = document.getElementById("password-icon-2");
+        item.innerHTML = `
+            &lt;svg onclick="hidePassword(${currentItem})" style="cursor: pointer;" width="25" height="25" viewBox="0 0 25 25" fill="none" xmlns="http://www.w3.org/2000/svg">
+                &lt;mask id="mask0_69960_5197" style="mask-type:alpha" maskUnits="userSpaceOnUse" x="0" y="0" width="25" height="25">
+                &lt;rect x="0.144531" y="0.80835" width="24" height="24" fill="#D9D9D9"/>
+                &lt;/mask>
+                &lt;g mask="url(#mask0_69960_5197)">
+                &lt;path d="M12.1443 16.8083C13.3943 16.8083 14.4568 16.3708 15.3318 15.4958C16.2068 14.6208 16.6443 13.5583 16.6443 12.3083C16.6443 11.0583 16.2068 9.99585 15.3318 9.12085C14.4568 8.24585 13.3943 7.80835 12.1443 7.80835C10.8943 7.80835 9.83184 8.24585 8.95684 9.12085C8.08184 9.99585 7.64434 11.0583 7.64434 12.3083C7.64434 13.5583 8.08184 14.6208 8.95684 15.4958C9.83184 16.3708 10.8943 16.8083 12.1443 16.8083ZM12.1443 15.0083C11.3943 15.0083 10.7568 14.7458 10.2318 14.2208C9.70684 13.6959 9.44434 13.0583 9.44434 12.3083C9.44434 11.5583 9.70684 10.9208 10.2318 10.3958C10.7568 9.87085 11.3943 9.60835 12.1443 9.60835C12.8943 9.60835 13.5318 9.87085 14.0568 10.3958C14.5818 10.9208 14.8443 11.5583 14.8443 12.3083C14.8443 13.0583 14.5818 13.6959 14.0568 14.2208C13.5318 14.7458 12.8943 15.0083 12.1443 15.0083ZM12.1443 19.8083C9.82767 19.8083 7.711 19.1959 5.79434 17.9708C3.87767 16.7458 2.42767 15.0917 1.44434 13.0083C1.39434 12.925 1.361 12.8209 1.34434 12.6958C1.32767 12.5708 1.31934 12.4417 1.31934 12.3083C1.31934 12.175 1.32767 12.0458 1.34434 11.9208C1.361 11.7958 1.39434 11.6917 1.44434 11.6083C2.42767 9.52502 3.87767 7.87085 5.79434 6.64585C7.711 5.42085 9.82767 4.80835 12.1443 4.80835C14.461 4.80835 16.5777 5.42085 18.4943 6.64585C20.411 7.87085 21.861 9.52502 22.8443 11.6083C22.8943 11.6917 22.9277 11.7958 22.9443 11.9208C22.961 12.0458 22.9693 12.175 22.9693 12.3083C22.9693 12.4417 22.961 12.5708 22.9443 12.6958C22.9277 12.8209 22.8943 12.925 22.8443 13.0083C21.861 15.0917 20.411 16.7458 18.4943 17.9708C16.5777 19.1959 14.461 19.8083 12.1443 19.8083ZM12.1443 17.8083C14.0277 17.8083 15.7568 17.3125 17.3318 16.3208C18.9068 15.3292 20.111 13.9917 20.9443 12.3083C20.111 10.625 18.9068 9.28752 17.3318 8.29585C15.7568 7.30418 14.0277 6.80835 12.1443 6.80835C10.261 6.80835 8.53184 7.30418 6.95684 8.29585C5.38184 9.28752 4.17767 10.625 3.34434 12.3083C4.17767 13.9917 5.38184 15.3292 6.95684 16.3208C8.53184 17.3125 10.261 17.8083 12.1443 17.8083Z" fill="#A8A8A8"/>
+                &lt;/g>
+            &lt;/svg>
+        `;
+        document.getElementById("password-input-2").type = "text";
+    }
+}
+
+
+/**
+ * hidden the password
+ * @param {*} currentItem 
+ */
+function hidePassword(currentItem) {
+    if (currentItem != 1) {
+        let item = document.getElementById("password-icon-1");
+        item.innerHTML = `
+            &lt;svg onclick="showPassword(${currentItem})" style="cursor: pointer;" width="25" height="25" viewBox="0 0 25 25" fill="none" xmlns="http://www.w3.org/2000/svg">
+                &lt;mask id="mask0_69960_5191" style="mask-type:alpha" maskUnits="userSpaceOnUse" x="0" y="0" width="25" height="25">
+                &lt;rect x="0.144531" y="0.80835" width="24" height="24" fill="#D9D9D9"/>
+                &lt;/mask>
+                &lt;g mask="url(#mask0_69960_5191)">
+                &lt;path d="M16.2443 14.1084L14.7943 12.6584C14.9443 11.8751 14.7193 11.1418 14.1193 10.4584C13.5193 9.77511 12.7443 9.50845 11.7943 9.65845L10.3443 8.20845C10.6277 8.07511 10.9152 7.97511 11.2068 7.90845C11.4985 7.84178 11.811 7.80845 12.1443 7.80845C13.3943 7.80845 14.4568 8.24595 15.3318 9.12095C16.2068 9.99595 16.6443 11.0584 16.6443 12.3084C16.6443 12.6418 16.611 12.9543 16.5443 13.2459C16.4777 13.5376 16.3777 13.8251 16.2443 14.1084ZM19.4443 17.2584L17.9943 15.8584C18.6277 15.3751 19.1902 14.8459 19.6818 14.2709C20.1735 13.6959 20.5943 13.0418 20.9443 12.3084C20.111 10.6251 18.9152 9.28761 17.3568 8.29595C15.7985 7.30428 14.061 6.80845 12.1443 6.80845C11.661 6.80845 11.186 6.84178 10.7193 6.90845C10.2527 6.97511 9.79434 7.07511 9.34434 7.20845L7.79434 5.65845C8.47767 5.37511 9.17767 5.16261 9.89434 5.02095C10.611 4.87928 11.361 4.80845 12.1443 4.80845C14.5277 4.80845 16.6693 5.43761 18.5693 6.69595C20.4693 7.95428 21.8943 9.59178 22.8443 11.6084C22.8943 11.6918 22.9277 11.7959 22.9443 11.9209C22.961 12.0459 22.9693 12.1751 22.9693 12.3084C22.9693 12.4418 22.9568 12.5709 22.9318 12.6959C22.9068 12.8209 22.8777 12.9251 22.8443 13.0084C22.461 13.8584 21.9818 14.6418 21.4068 15.3584C20.8318 16.0751 20.1777 16.7084 19.4443 17.2584ZM19.2443 22.7084L15.7443 19.2584C15.161 19.4418 14.5735 19.5793 13.9818 19.6709C13.3902 19.7626 12.7777 19.8084 12.1443 19.8084C9.761 19.8084 7.61934 19.1793 5.71934 17.9209C3.81934 16.6626 2.39434 15.0251 1.44434 13.0084C1.39434 12.9251 1.361 12.8209 1.34434 12.6959C1.32767 12.5709 1.31934 12.4418 1.31934 12.3084C1.31934 12.1751 1.32767 12.0501 1.34434 11.9334C1.361 11.8168 1.39434 11.7168 1.44434 11.6334C1.79434 10.8834 2.211 10.1918 2.69434 9.55845C3.17767 8.92511 3.711 8.34178 4.29434 7.80845L2.21934 5.70845C2.036 5.52511 1.94434 5.29595 1.94434 5.02095C1.94434 4.74595 2.04434 4.50845 2.24434 4.30845C2.42767 4.12511 2.661 4.03345 2.94434 4.03345C3.22767 4.03345 3.461 4.12511 3.64434 4.30845L20.6443 21.3084C20.8277 21.4918 20.9235 21.7209 20.9318 21.9959C20.9402 22.2709 20.8443 22.5084 20.6443 22.7084C20.461 22.8918 20.2277 22.9834 19.9443 22.9834C19.661 22.9834 19.4277 22.8918 19.2443 22.7084ZM5.69434 9.20845C5.211 9.64178 4.76934 10.1168 4.36934 10.6334C3.96934 11.1501 3.62767 11.7084 3.34434 12.3084C4.17767 13.9918 5.3735 15.3293 6.93184 16.3209C8.49017 17.3126 10.2277 17.8084 12.1443 17.8084C12.4777 17.8084 12.8027 17.7876 13.1193 17.7459C13.436 17.7043 13.761 17.6584 14.0943 17.6084L13.1943 16.6584C13.011 16.7084 12.836 16.7459 12.6693 16.7709C12.5027 16.7959 12.3277 16.8084 12.1443 16.8084C10.8943 16.8084 9.83184 16.3709 8.95684 15.4959C8.08184 14.6209 7.64434 13.5584 7.64434 12.3084C7.64434 12.1251 7.65684 11.9501 7.68184 11.7834C7.70684 11.6168 7.74434 11.4418 7.79434 11.2584L5.69434 9.20845Z" fill="#A8A8A8"/>
+                &lt;/g>
+            &lt;/svg>
+        `;
+        document.getElementById("password-input-1").type = "password";
+    } else {
+        let item = document.getElementById("password-icon-2");
+        item.innerHTML = `
+            &lt;svg onclick="showPassword(${currentItem})" style="cursor: pointer;" width="25" height="25" viewBox="0 0 25 25" fill="none" xmlns="http://www.w3.org/2000/svg">
+                &lt;mask id="mask0_69960_5191" style="mask-type:alpha" maskUnits="userSpaceOnUse" x="0" y="0" width="25" height="25">
+                &lt;rect x="0.144531" y="0.80835" width="24" height="24" fill="#D9D9D9"/>
+                &lt;/mask>
+                &lt;g mask="url(#mask0_69960_5191)">
+                &lt;path d="M16.2443 14.1084L14.7943 12.6584C14.9443 11.8751 14.7193 11.1418 14.1193 10.4584C13.5193 9.77511 12.7443 9.50845 11.7943 9.65845L10.3443 8.20845C10.6277 8.07511 10.9152 7.97511 11.2068 7.90845C11.4985 7.84178 11.811 7.80845 12.1443 7.80845C13.3943 7.80845 14.4568 8.24595 15.3318 9.12095C16.2068 9.99595 16.6443 11.0584 16.6443 12.3084C16.6443 12.6418 16.611 12.9543 16.5443 13.2459C16.4777 13.5376 16.3777 13.8251 16.2443 14.1084ZM19.4443 17.2584L17.9943 15.8584C18.6277 15.3751 19.1902 14.8459 19.6818 14.2709C20.1735 13.6959 20.5943 13.0418 20.9443 12.3084C20.111 10.6251 18.9152 9.28761 17.3568 8.29595C15.7985 7.30428 14.061 6.80845 12.1443 6.80845C11.661 6.80845 11.186 6.84178 10.7193 6.90845C10.2527 6.97511 9.79434 7.07511 9.34434 7.20845L7.79434 5.65845C8.47767 5.37511 9.17767 5.16261 9.89434 5.02095C10.611 4.87928 11.361 4.80845 12.1443 4.80845C14.5277 4.80845 16.6693 5.43761 18.5693 6.69595C20.4693 7.95428 21.8943 9.59178 22.8443 11.6084C22.8943 11.6918 22.9277 11.7959 22.9443 11.9209C22.961 12.0459 22.9693 12.1751 22.9693 12.3084C22.9693 12.4418 22.9568 12.5709 22.9318 12.6959C22.9068 12.8209 22.8777 12.9251 22.8443 13.0084C22.461 13.8584 21.9818 14.6418 21.4068 15.3584C20.8318 16.0751 20.1777 16.7084 19.4443 17.2584ZM19.2443 22.7084L15.7443 19.2584C15.161 19.4418 14.5735 19.5793 13.9818 19.6709C13.3902 19.7626 12.7777 19.8084 12.1443 19.8084C9.761 19.8084 7.61934 19.1793 5.71934 17.9209C3.81934 16.6626 2.39434 15.0251 1.44434 13.0084C1.39434 12.9251 1.361 12.8209 1.34434 12.6959C1.32767 12.5709 1.31934 12.4418 1.31934 12.3084C1.31934 12.1751 1.32767 12.0501 1.34434 11.9334C1.361 11.8168 1.39434 11.7168 1.44434 11.6334C1.79434 10.8834 2.211 10.1918 2.69434 9.55845C3.17767 8.92511 3.711 8.34178 4.29434 7.80845L2.21934 5.70845C2.036 5.52511 1.94434 5.29595 1.94434 5.02095C1.94434 4.74595 2.04434 4.50845 2.24434 4.30845C2.42767 4.12511 2.661 4.03345 2.94434 4.03345C3.22767 4.03345 3.461 4.12511 3.64434 4.30845L20.6443 21.3084C20.8277 21.4918 20.9235 21.7209 20.9318 21.9959C20.9402 22.2709 20.8443 22.5084 20.6443 22.7084C20.461 22.8918 20.2277 22.9834 19.9443 22.9834C19.661 22.9834 19.4277 22.8918 19.2443 22.7084ZM5.69434 9.20845C5.211 9.64178 4.76934 10.1168 4.36934 10.6334C3.96934 11.1501 3.62767 11.7084 3.34434 12.3084C4.17767 13.9918 5.3735 15.3293 6.93184 16.3209C8.49017 17.3126 10.2277 17.8084 12.1443 17.8084C12.4777 17.8084 12.8027 17.7876 13.1193 17.7459C13.436 17.7043 13.761 17.6584 14.0943 17.6084L13.1943 16.6584C13.011 16.7084 12.836 16.7459 12.6693 16.7709C12.5027 16.7959 12.3277 16.8084 12.1443 16.8084C10.8943 16.8084 9.83184 16.3709 8.95684 15.4959C8.08184 14.6209 7.64434 13.5584 7.64434 12.3084C7.64434 12.1251 7.65684 11.9501 7.68184 11.7834C7.70684 11.6168 7.74434 11.4418 7.79434 11.2584L5.69434 9.20845Z" fill="#A8A8A8"/>
+                &lt;/g>
+            &lt;/svg>
+        `;
+        document.getElementById("password-input-2").type = "password";
+    }
+}</code></pre>
+        </article>
+    </section>
+
+
+
+
+</div>
+
+<nav>
+    <h2><a href="index.html">Home</a></h2><h3>Global</h3><ul><li><a href="global.html#addAssignedToTemplate">addAssignedToTemplate</a></li><li><a href="global.html#addContact">addContact</a></li><li><a href="global.html#addEditSubtask">addEditSubtask</a></li><li><a href="global.html#addSubtask">addSubtask</a></li><li><a href="global.html#addTaskTemplate">addTaskTemplate</a></li><li><a href="global.html#allowDrop">allowDrop</a></li><li><a href="global.html#assignedToTemplate">assignedToTemplate</a></li><li><a href="global.html#assignedUsers">assignedUsers</a></li><li><a href="global.html#changeType">changeType</a></li><li><a href="global.html#checkLink">checkLink</a></li><li><a href="global.html#checkLogin">checkLogin</a></li><li><a href="global.html#checkPager">checkPager</a></li><li><a href="global.html#checkUser">checkUser</a></li><li><a href="global.html#clearContactForm">clearContactForm</a></li><li><a href="global.html#clearErrorMessages">clearErrorMessages</a></li><li><a href="global.html#clearForm">clearForm</a></li><li><a href="global.html#clickUpdateTask">clickUpdateTask</a></li><li><a href="global.html#closeContactDetails">closeContactDetails</a></li><li><a href="global.html#closeContactForm">closeContactForm</a></li><li><a href="global.html#closeDropdown">closeDropdown</a></li><li><a href="global.html#closeEditOverlay">closeEditOverlay</a></li><li><a href="global.html#closeFilteredTasks">closeFilteredTasks</a></li><li><a href="global.html#closePopOverlay">closePopOverlay</a></li><li><a href="global.html#closeSubtask">closeSubtask</a></li><li><a href="global.html#container">container</a></li><li><a href="global.html#createNewUser">createNewUser</a></li><li><a href="global.html#createTask">createTask</a></li><li><a href="global.html#createUserContact">createUserContact</a></li><li><a href="global.html#decideCardType">decideCardType</a></li><li><a href="global.html#delEditSubtask">delEditSubtask</a></li><li><a href="global.html#delSubtask">delSubtask</a></li><li><a href="global.html#deleteTask">deleteTask</a></li><li><a href="global.html#deleteUser">deleteUser</a></li><li><a href="global.html#doNotClose">doNotClose</a></li><li><a href="global.html#editContact">editContact</a></li><li><a href="global.html#editEditSubtask">editEditSubtask</a></li><li><a href="global.html#editSubtask">editSubtask</a></li><li><a href="global.html#editTask">editTask</a></li><li><a href="global.html#fetchNewType">fetchNewType</a></li><li><a href="global.html#filterTasks">filterTasks</a></li><li><a href="global.html#focusSubtask">focusSubtask</a></li><li><a href="global.html#generateGreets">generateGreets</a></li><li><a href="global.html#generateInitials">generateInitials</a></li><li><a href="global.html#getAddTask">getAddTask</a></li><li><a href="global.html#getAssignedUsers">getAssignedUsers</a></li><li><a href="global.html#getGreeting">getGreeting</a></li><li><a href="global.html#getRandomColor">getRandomColor</a></li><li><a href="global.html#goBack">goBack</a></li><li><a href="global.html#goToBoard">goToBoard</a></li><li><a href="global.html#goToSignUp">goToSignUp</a></li><li><a href="global.html#guestLogin">guestLogin</a></li><li><a href="global.html#handleDate">handleDate</a></li><li><a href="global.html#handleDrag">handleDrag</a></li><li><a href="global.html#handleDragEnd">handleDragEnd</a></li><li><a href="global.html#handleDragLeave">handleDragLeave</a></li><li><a href="global.html#handleDragOver">handleDragOver</a></li><li><a href="global.html#handleDrop">handleDrop</a></li><li><a href="global.html#handleEditDate">handleEditDate</a></li><li><a href="global.html#handleHover">handleHover</a></li><li><a href="global.html#handleHoverEnd">handleHoverEnd</a></li><li><a href="global.html#hiddenImg">hiddenImg</a></li><li><a href="global.html#hiddenSuccessMsgTasks">hiddenSuccessMsgTasks</a></li><li><a href="global.html#hidePassword">hidePassword</a></li><li><a href="global.html#includeHTML">includeHTML</a></li><li><a href="global.html#init">init</a></li><li><a href="global.html#initAddTask">initAddTask</a></li><li><a href="global.html#initBoard">initBoard</a></li><li><a href="global.html#initContacts">initContacts</a></li><li><a href="global.html#initHeader">initHeader</a></li><li><a href="global.html#initHelp">initHelp</a></li><li><a href="global.html#initLegalNotice">initLegalNotice</a></li><li><a href="global.html#initLogin">initLogin</a></li><li><a href="global.html#initNav">initNav</a></li><li><a href="global.html#initPrivacyPolicy">initPrivacyPolicy</a></li><li><a href="global.html#initProfilePopUp">initProfilePopUp</a></li><li><a href="global.html#initSummary">initSummary</a></li><li><a href="global.html#isExistingUser">isExistingUser</a></li><li><a href="global.html#lastValidate">lastValidate</a></li><li><a href="global.html#loadFilteredTasks">loadFilteredTasks</a></li><li><a href="global.html#loadProfile">loadProfile</a></li><li><a href="global.html#loadRenderCard">loadRenderCard</a></li><li><a href="global.html#loadRenderContactList">loadRenderContactList</a></li><li><a href="global.html#loadTaskInEditCard">loadTaskInEditCard</a></li><li><a href="global.html#loadUrgentTasks">loadUrgentTasks</a></li><li><a href="global.html#loadUserCounter">loadUserCounter</a></li><li><a href="global.html#loadUsers">loadUsers</a></li><li><a href="global.html#loadingNumbers">loadingNumbers</a></li><li><a href="global.html#loadingPasswordIcons">loadingPasswordIcons</a></li><li><a href="global.html#loadingSignUsers">loadingSignUsers</a></li><li><a href="global.html#loadingTasks">loadingTasks</a></li><li><a href="global.html#loadingUsers">loadingUsers</a></li><li><a href="global.html#lockImg">lockImg</a></li><li><a href="global.html#logOut">logOut</a></li><li><a href="global.html#newSubtask">newSubtask</a></li><li><a href="global.html#notLogin">notLogin</a></li><li><a href="global.html#postData">postData</a></li><li><a href="global.html#postUser">postUser</a></li><li><a href="global.html#putUsercount">putUsercount</a></li><li><a href="global.html#reUpdateUser">reUpdateUser</a></li><li><a href="global.html#removeEditDel">removeEditDel</a></li><li><a href="global.html#removeOverlay">removeOverlay</a></li><li><a href="global.html#renderArrow">renderArrow</a></li><li><a href="global.html#renderAssignedUser">renderAssignedUser</a></li><li><a href="global.html#renderAvatar">renderAvatar</a></li><li><a href="global.html#renderAvatarBigCard">renderAvatarBigCard</a></li><li><a href="global.html#renderCardOverlay">renderCardOverlay</a></li><li><a href="global.html#renderContactDetails">renderContactDetails</a></li><li><a href="global.html#renderContactList">renderContactList</a></li><li><a href="global.html#renderContactListItem">renderContactListItem</a></li><li><a href="global.html#renderEditAssignedUser">renderEditAssignedUser</a></li><li><a href="global.html#renderEditAvatar">renderEditAvatar</a></li><li><a href="global.html#renderEditContact">renderEditContact</a></li><li><a href="global.html#renderEditDeletePopup">renderEditDeletePopup</a></li><li><a href="global.html#renderEditOverlay">renderEditOverlay</a></li><li><a href="global.html#renderEditSubtask">renderEditSubtask</a></li><li><a href="global.html#renderEditSubtasks">renderEditSubtasks</a></li><li><a href="global.html#renderEditTaskSubtask">renderEditTaskSubtask</a></li><li><a href="global.html#renderFilteredTasks">renderFilteredTasks</a></li><li><a href="global.html#renderNewContact">renderNewContact</a></li><li><a href="global.html#renderNoTask">renderNoTask</a></li><li><a href="global.html#renderNoTaskCard">renderNoTaskCard</a></li><li><a href="global.html#renderNotFindTask">renderNotFindTask</a></li><li><a href="global.html#renderSubtaskBigCard">renderSubtaskBigCard</a></li><li><a href="global.html#renderSubtasks">renderSubtasks</a></li><li><a href="global.html#renderTaskAvatar">renderTaskAvatar</a></li><li><a href="global.html#renderTaskCard">renderTaskCard</a></li><li><a href="global.html#renderTasks">renderTasks</a></li><li><a href="global.html#rendererAvatar">rendererAvatar</a></li><li><a href="global.html#rendererEditAvatar">rendererEditAvatar</a></li><li><a href="global.html#rendererTaskAvatar">rendererTaskAvatar</a></li><li><a href="global.html#saveCurrentUser">saveCurrentUser</a></li><li><a href="global.html#saveEdit">saveEdit</a></li><li><a href="global.html#saveEditTask">saveEditTask</a></li><li><a href="global.html#selectCategory">selectCategory</a></li><li><a href="global.html#selectEditCategory">selectEditCategory</a></li><li><a href="global.html#selectEditPriority">selectEditPriority</a></li><li><a href="global.html#selectPriority">selectPriority</a></li><li><a href="global.html#showAddTaskDetails">showAddTaskDetails</a></li><li><a href="global.html#showBoardTasks">showBoardTasks</a></li><li><a href="global.html#showContactDetails">showContactDetails</a></li><li><a href="global.html#showEditTask">showEditTask</a></li><li><a href="global.html#showError">showError</a></li><li><a href="global.html#showPassword">showPassword</a></li><li><a href="global.html#showPicker">showPicker</a></li><li><a href="global.html#showSuccessMsgTasks">showSuccessMsgTasks</a></li><li><a href="global.html#signUp">signUp</a></li><li><a href="global.html#sortUrgentTask">sortUrgentTask</a></li><li><a href="global.html#subValidate">subValidate</a></li><li><a href="global.html#subtaskCal">subtaskCal</a></li><li><a href="global.html#textTrimmer">textTrimmer</a></li><li><a href="global.html#toggleAvatar">toggleAvatar</a></li><li><a href="global.html#toggleCategoryDropdown">toggleCategoryDropdown</a></li><li><a href="global.html#toggleDropdown">toggleDropdown</a></li><li><a href="global.html#toggleEditAvatar">toggleEditAvatar</a></li><li><a href="global.html#toggleEditDeletePopup">toggleEditDeletePopup</a></li><li><a href="global.html#togglePopUp">togglePopUp</a></li><li><a href="global.html#toggleRememberMeBtn">toggleRememberMeBtn</a></li><li><a href="global.html#toggleSubtask">toggleSubtask</a></li><li><a href="global.html#updateSubtask">updateSubtask</a></li><li><a href="global.html#updateSubtaskDisplay">updateSubtaskDisplay</a></li><li><a href="global.html#updateTask">updateTask</a></li><li><a href="global.html#updateUser">updateUser</a></li><li><a href="global.html#validateCat">validateCat</a></li><li><a href="global.html#validateContactForm">validateContactForm</a></li><li><a href="global.html#validateDate">validateDate</a></li><li><a href="global.html#validateEmail">validateEmail</a></li><li><a href="global.html#validateFunction">validateFunction</a></li><li><a href="global.html#validateName">validateName</a></li><li><a href="global.html#validatePassword">validatePassword</a></li><li><a href="global.html#validatePhone">validatePhone</a></li><li><a href="global.html#validateSignUpForm">validateSignUpForm</a></li><li><a href="global.html#validateUser">validateUser</a></li><li><a href="global.html#writeNumber">writeNumber</a></li></ul>
+</nav>
+
+<br class="clear">
+
+<footer>
+    Documentation generated by <a href="https://github.com/jsdoc/jsdoc">JSDoc 4.0.4</a> on Fri Jun 27 2025 13:31:40 GMT+0200 (Mitteleuropäische Sommerzeit)
+</footer>
+
+<script> prettyPrint(); </script>
+<script src="scripts/linenumber.js"> </script>
+</body>
+</html>

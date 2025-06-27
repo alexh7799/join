@@ -2,7 +2,7 @@
  * render the contact list
  * @param {*} usergroup - the user-group
  * @param {*} alphabet - the current alphabet
- * @returns 
+ * @returns {string}
  */
 function renderContactList(usergroup, alphabet) {
     let group = `<div class="contact-group">
@@ -18,7 +18,7 @@ function renderContactList(usergroup, alphabet) {
 /**
  * render the user item
  * @param {*} user 
- * @returns 
+ * @returns {string}
  */
 function renderContactListItem(user) {
     let initials = user.name.split(' ').map(name => name.charAt(0).toUpperCase()).join('');
@@ -38,7 +38,7 @@ function renderContactListItem(user) {
 /**
  * renderer the contact details
  * @param {*} user 
- * @returns 
+ * @returns {string}
  */
 function renderContactDetails(user) {
     let initials = user.name.split(' ').map(name => name.charAt(0).toUpperCase()).join('');
@@ -77,7 +77,7 @@ function renderContactDetails(user) {
 /**
  * renderer the edit overlay
  * @param {*} user 
- * @returns 
+ * @returns {string}
  */
 function renderEditContact(user) {
     let initials = userArray[user].name.split(' ').map(name => name.charAt(0).toUpperCase()).join('');
@@ -145,7 +145,7 @@ function renderEditContact(user) {
 
 /**
  * renderer the new contact overlay
- * @returns 
+ * @returns {string}
  */
 function renderNewContact() {    
     return `<div class="popup">
@@ -218,8 +218,8 @@ function renderNewContact() {
 
 /**
  * renderer the edit and delete popup
- * @param {*} user 
- * @returns 
+ * @param {*} user
+ * @returns {string}
  */
 function renderEditDeletePopup(user) {
     return `<li><button class="contact-btn" onclick="editContact('${userArray.indexOf(user)}', removeEditDel())">

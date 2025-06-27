@@ -34,7 +34,7 @@ function initAddTask() {
 /**
  * check login status
  * @param {*} sessionUser 
- * @returns 
+ * @returns {boolean}
  */
 function checkPager(sessionUser) {
     if (!sessionUser) {

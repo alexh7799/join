@@ -2,7 +2,7 @@
 <html lang="en">
 <head>
     <meta charset="utf-8">
-    <title>JSDoc: Source: script.js</title>
+    <title>JSDoc: Source: header-sidebar/header-sidebar.js</title>
 
     <script src="scripts/prettify/prettify.js"> </script>
     <script src="scripts/prettify/lang-css.js"> </script>
@@ -17,7 +17,7 @@
 
 <div id="main">
 
-    <h1 class="page-title">Source: script.js</h1>
+    <h1 class="page-title">Source: header-sidebar/header-sidebar.js</h1>
 
     
 
@@ -26,118 +26,56 @@
     
     <section>
         <article>
-            <pre class="prettyprint source linenums"><code>const BASE_URL ="https://join-b1b53-default-rtdb.europe-west1.firebasedatabase.app";
-
-/**
- * go back to the last page
+            <pre class="prettyprint source linenums"><code>/**
+ * toggle the popup for the logout/legal/privacy policy
  */
-function goBack() {
-  window.history.back();
+function togglePopUp() {
+    let popUp = document.getElementById("profile-pop-up");
+    popUp.classList.toggle("into-view");
+
+    let overlayContainer = document.getElementById("overlay-container");
+    overlayContainer.style.right = "calc(0px)";
 }
 
 
 /**
- * load nav and header
+ * remove the overlay
  */
-function includeHTML() {
-  let navigation = document.getElementById("navigation-container");
-  navigation.innerHTML = initNav();
-  let header = document.getElementById("header-container");
-  header.innerHTML = initHeader();
-  let popUp = document.getElementById("overlay-container");
-  popUp.innerHTML = initProfilePopUp();
+function removeOverlay() {
+    let popUp = document.getElementById("profile-pop-up");
+    popUp.classList.remove("into-view");
+
+    let overlayContainer = document.getElementById("overlay-container");
+    overlayContainer.style.right = "calc(-100vw)";
 }
 
 
 /**
- * check the login status
+ * event listener for the not closing of the popup
+ * @param {*} event 
  */
-function checkLogin() {
-  const isLoginPage = window.location.pathname.includes("join/login/login.html");
-  const sessionUser = sessionStorage.getItem("username");
-  const localUser = localStorage.getItem("username");
+function doNotClose(event) {
+    event.stopPropagation();
+};
 
-  // Wenn Remember-Me aktiv (localUser vorhanden)
-  if (localUser &amp;&amp; !sessionUser) {
-    sessionStorage.setItem("username", localUser);
-    sessionStorage.setItem("email", localStorage.getItem("email"));
-  }
 
-  checkPager(sessionUser);
+/**
+ * logout function
+ */
+function logOut() {
+    localStorage.clear();
+    sessionStorage.clear();
+    location.href='../login/login.html';
 }
 
 
 /**
- * Generate initials for the top right corner in the header section.
+ * load the profile
  */
-function generateInitials() {
-  let content = document.getElementById("profile");
-
-  let userName = sessionStorage.getItem("username");
-  content.innerHTML = "";
-  let nameParts = userName.split(" ");
-  if (nameParts.length >= 2) {
-    let initials = (nameParts[0][0] + nameParts[1][0]).toUpperCase();
-    content.innerHTML = initials;
-  } else if (nameParts.length === 1) {
-    let initials = nameParts[0][0].toUpperCase();
-    content.innerHTML = initials;
-  } else {
-    content.innerHTML = "G";
-  }
-}
-
-
-/**
- * random color function for the profile section
- * @returns {string}
- */
-function getRandomColor() {
-  const r = Math.floor(Math.random() * 256);
-  const g = Math.floor(Math.random() * 256);
-  const b = Math.floor(Math.random() * 256);
-  return `#${r.toString(16).padStart(2, '0')}${g.toString(16).padStart(2, '0')}${b.toString(16).padStart(2, '0')}`;
-}
-
-
-/**
- * check link function to highlight the active link in the sidebar
- */
-function checkLink() {
-  const currentPath = window.location.pathname;
-  const sidebarLinks = document.querySelectorAll('#navigation-container .aside-nav a');
-  sidebarLinks.forEach(link => {
-    link.classList.remove('active');
-    let href = link.getAttribute('href').replace('../', '');
-    if (currentPath.includes(href)) {
-      link.classList.add('active');
-    } else {
-      link.classList.remove('active');
-    }
-  });
-}
-
-
-/**
- * not logged in function to hide the sidebar and profile section
- */
-function notLogin() {
-  let sidebar = document.getElementById('navigation-container');
-  let profile = document.getElementById('profile');
-  let info = document.getElementById('info');
-  let asideNav = document.getElementById('aside-nav');
-  if (sessionStorage.getItem("username") == null) {
-    sidebar.classList.add('no-login-sidebar-none');
-    profile.classList.add('no-login-none');
-    info.classList.add('no-login-none');
-    asideNav.classList.add('no-login-none');
-  } else {
-    sidebar.classList.remove('no-login-sidebar-none');
-    profile.classList.remove('no-login-none');
-    info.classList.remove('no-login-none');
-    asideNav.classList.remove('no-login-none');
-    generateInitials();
-  }
+function loadProfile() {
+    let profile = document.getElementById('profile');
+    let userName = sessionStorage.getItem("username");
+    
 }</code></pre>
         </article>
     </section>

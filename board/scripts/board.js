@@ -37,7 +37,7 @@ async function loadingTasks() {
 /**
  * check login status
  * @param {*} sessionUser 
- * @returns 
+ * @returns {boolean}
  */
 function checkPager(sessionUser) {
   if (!sessionUser) {
@@ -130,7 +130,7 @@ function renderNoTask(containerId) {
  * trimmt the text
  * @param {*} text 
  * @param {*} textLength 
- * @returns 
+ * @returns {string}
  */
 function textTrimmer(text, textLength) {
   return text.length > textLength ? text.substring(0, textLength) + "..." : text;
@@ -140,7 +140,7 @@ function textTrimmer(text, textLength) {
 /**
  * renderValues for the prossesbar
  * @param {*} task 
- * @returns 
+ * @returns {object}
  */
 function subtaskCal(task) {
   if(task == undefined) return 0;
@@ -215,7 +215,6 @@ async function toggleSubtask(firebaseId, completed, id) {
 
 /**
  * update the task
- *
  * @param {*} editCard 
  */
 async function updateTask(editCard) {
@@ -259,7 +258,7 @@ async function deleteTask(id) {
 
 /**
  * filter function for the search Input
- * @returns 
+ * @returns {*}
  */
 function filterTasks(searchInput) {
   let searchTerm = searchInput.value;
@@ -335,7 +334,7 @@ function closeFilteredTasks() {
 /**
  * show the overlay for new Task
  * @param {*} type 
- * @returns 
+ * @returns {boolean}
  */
 async function showAddTaskDetails(type) {
   try {

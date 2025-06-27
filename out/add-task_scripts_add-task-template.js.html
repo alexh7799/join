@@ -2,7 +2,7 @@
 <html lang="en">
 <head>
     <meta charset="utf-8">
-    <title>JSDoc: Source: script.js</title>
+    <title>JSDoc: Source: add-task/scripts/add-task-template.js</title>
 
     <script src="scripts/prettify/prettify.js"> </script>
     <script src="scripts/prettify/lang-css.js"> </script>
@@ -17,7 +17,7 @@
 
 <div id="main">
 
-    <h1 class="page-title">Source: script.js</h1>
+    <h1 class="page-title">Source: add-task/scripts/add-task-template.js</h1>
 
     
 
@@ -26,118 +26,188 @@
     
     <section>
         <article>
-            <pre class="prettyprint source linenums"><code>const BASE_URL ="https://join-b1b53-default-rtdb.europe-west1.firebasedatabase.app";
-
-/**
- * go back to the last page
- */
-function goBack() {
-  window.history.back();
-}
-
-
-/**
- * load nav and header
- */
-function includeHTML() {
-  let navigation = document.getElementById("navigation-container");
-  navigation.innerHTML = initNav();
-  let header = document.getElementById("header-container");
-  header.innerHTML = initHeader();
-  let popUp = document.getElementById("overlay-container");
-  popUp.innerHTML = initProfilePopUp();
-}
-
-
-/**
- * check the login status
- */
-function checkLogin() {
-  const isLoginPage = window.location.pathname.includes("join/login/login.html");
-  const sessionUser = sessionStorage.getItem("username");
-  const localUser = localStorage.getItem("username");
-
-  // Wenn Remember-Me aktiv (localUser vorhanden)
-  if (localUser &amp;&amp; !sessionUser) {
-    sessionStorage.setItem("username", localUser);
-    sessionStorage.setItem("email", localStorage.getItem("email"));
-  }
-
-  checkPager(sessionUser);
-}
-
-
-/**
- * Generate initials for the top right corner in the header section.
- */
-function generateInitials() {
-  let content = document.getElementById("profile");
-
-  let userName = sessionStorage.getItem("username");
-  content.innerHTML = "";
-  let nameParts = userName.split(" ");
-  if (nameParts.length >= 2) {
-    let initials = (nameParts[0][0] + nameParts[1][0]).toUpperCase();
-    content.innerHTML = initials;
-  } else if (nameParts.length === 1) {
-    let initials = nameParts[0][0].toUpperCase();
-    content.innerHTML = initials;
-  } else {
-    content.innerHTML = "G";
-  }
-}
-
-
-/**
- * random color function for the profile section
+            <pre class="prettyprint source linenums"><code>/**
+ * render function for add task
+ * @param {*} type 
  * @returns {string}
  */
-function getRandomColor() {
-  const r = Math.floor(Math.random() * 256);
-  const g = Math.floor(Math.random() * 256);
-  const b = Math.floor(Math.random() * 256);
-  return `#${r.toString(16).padStart(2, '0')}${g.toString(16).padStart(2, '0')}${b.toString(16).padStart(2, '0')}`;
+function getAddTask(type) {
+    return `
+    &lt;main class="main-content" onclick="event.stopPropagation(); closeDropdown();">
+        &lt;div class="main-title d-flex-sb-c">
+            &lt;h1>Add Task&lt;/h1>
+            &lt;div class="btn d-flex-c-c d-none" id="popup-btn" onclick="closePopOverlay()">
+                &lt;img src="../assets/icons/close.svg" alt="close">
+            &lt;/div>
+        &lt;/div>
+        &lt;section class="task-form">
+            &lt;div class="form-left">
+                &lt;p>Title&lt;span class="required">*&lt;/span>&lt;/p>
+                &lt;div>
+                    &lt;input class="input-text" type="text" id="title" name="title" placeholder="Enter a title">
+                    &lt;div class="error-message" id="error-div-title"> &lt;/div>
+                &lt;/div>
+
+                &lt;p>Description&lt;/p>
+                &lt;textarea id="description" name="description" placeholder="Enter a Description">&lt;/textarea>
+
+                &lt;p>Assigned to&lt;/p>
+                &lt;div class="dropdown" id="assigned-to" onclick="event.stopPropagation(); closeDropdown();">
+                    &lt;div class="dropdown-header" onclick="event.stopPropagation(); toggleDropdown();">
+                        &lt;span id="dropdown-selected">Select contacts to assign&lt;/span>
+                        &lt;span class="dropdown-arrow" id="dropdown-arrow">
+                            &lt;img src="../assets/icons/arrow-dropdown.svg">
+                        &lt;/span>
+                    &lt;/div>
+                    &lt;div class="dropdown-options" id="dropdown-options" onclick="event.stopPropagation();">
+                    &lt;/div>
+                &lt;/div>
+                &lt;div id="avatar-container">
+                    
+                &lt;/div>
+            &lt;/div>
+
+            &lt;div class="divider_mid">&lt;/div>
+
+            &lt;div class="form-right">
+                &lt;p>Date&lt;span class="required">*&lt;/span>&lt;/p>
+                &lt;div>
+                    &lt;div class="input-date-container">
+                        &lt;input class="input-text" type="date" id="due-date" name="due_date" onchange="handleDate(this)">
+                        &lt;div class="calendar-icon" onclick="showPicker()">&lt;/div>
+                    &lt;/div>
+                    &lt;div class="error-message" id="error-div-due-date"> &lt;/div>
+                &lt;/div>
+                &lt;p>Prio&lt;/p>
+                &lt;div class="priority">
+                    &lt;button type="button" class="prio urgent" id="urgent" onclick="selectPriority('urgent')">
+                        &lt;p>Urgent&lt;/p>
+                        &lt;img id="urgent-img" src="../assets/icons/urgent.svg">
+                    &lt;/button>
+                    &lt;button type="button" class="prio medium selected" id="medium" onclick="selectPriority('medium')">
+                        &lt;p>Medium&lt;/p>
+                        &lt;img id="medium-img" src="../assets/icons/medium.svg">
+                    &lt;/button>
+                    &lt;button type="button" class="prio low" id="low" onclick="selectPriority('low')">
+                        &lt;p>Low&lt;/p>
+                        &lt;img id="low-img" src="../assets/icons/low.svg">
+                    &lt;/button>
+                &lt;/div>
+
+                &lt;p>Category&lt;span class="required">*&lt;/span>&lt;/p>
+                &lt;div>
+                    &lt;div class="dropdown" id="category" onclick="event.stopPropagation(); toggleCategoryDropdown();">
+                        &lt;div class="dropdown-header" onclick="event.stopPropagation(); toggleCategoryDropdown();">
+                            &lt;span id="dropdown-cat-selected">Select task category&lt;/span>
+                            &lt;span class="dropdown-arrow" id="dropdown-cat-arrow">
+                                &lt;img src="../assets/icons/arrow-dropdown.svg">
+                            &lt;/span>
+                        &lt;/div>
+                        &lt;div class="dropdown-options" id="dropdown-cat-options" onclick="event.stopPropagation();">
+                            &lt;div class="dropdown-item btn" onclick="selectCategory('Technical Task'); closeDropdown();">
+                                &lt;p>Technical Task&lt;/p>
+                            &lt;/div>
+                            &lt;div class="dropdown-item btn" onclick="selectCategory('User Story'); closeDropdown();">
+                                &lt;p>User Story&lt;/p>
+                            &lt;/div>
+                        &lt;/div>
+                    &lt;/div>
+                    &lt;div class="error-message" id="error-div-category">&lt;/div>
+                &lt;/div>
+
+                &lt;p>Subtasks&lt;/p>
+                &lt;div class="subtasks">
+                    &lt;div class="subtask-input-container">
+                        &lt;input id="subtask-input" maxlength="100" class="input-text" placeholder="Add new subtask" onfocus="focusSubtask()"/>
+                        &lt;div id="new-subtask" onclick="newSubtask(this)">
+                            &lt;img src="../assets/icons/add.svg" alt="plus_icon"/>
+                        &lt;/div>                        
+                        &lt;div id="close-check" class="btn-div-sub d-none">
+                            &lt;img onclick="closeSubtask()" class="sub-btn" src="../assets/icons/close.svg" alt="close"/>
+                            &lt;div class="divider-input">&lt;/div>
+                            &lt;img onclick="addSubtask()" class="sub-btn" src="../assets/icons/check.svg" alt="check"/>
+                        &lt;/div>
+                    &lt;/div>
+                    &lt;div id="messages-container" class="messages-container">
+                    
+                    &lt;/div>
+                &lt;/div>
+            &lt;/div>
+        &lt;/section>
+        &lt;div class="form-actions">
+            &lt;div class="required-message">
+                &lt;p>&lt;span class="required">*&lt;/span>This field is required&lt;/p>
+            &lt;/div>
+            &lt;div>
+                &lt;button class="btn-clear btn-cre-cle" onclick="clearForm()">Clear ✕&lt;/button>
+                &lt;button class="btn-create btn-cre-cle" onclick="createTask('${type}')">Create Task ✔&lt;/button>
+            &lt;/div>
+        &lt;/div>
+    &lt;/main>`;
 }
 
 
 /**
- * check link function to highlight the active link in the sidebar
+ * render users in the dropdown in add task
+ * @param {*} assigned 
+ * @returns {string}
  */
-function checkLink() {
-  const currentPath = window.location.pathname;
-  const sidebarLinks = document.querySelectorAll('#navigation-container .aside-nav a');
-  sidebarLinks.forEach(link => {
-    link.classList.remove('active');
-    let href = link.getAttribute('href').replace('../', '');
-    if (currentPath.includes(href)) {
-      link.classList.add('active');
-    } else {
-      link.classList.remove('active');
-    }
-  });
+function renderAssignedUser(assigned) {
+    let initials = assigned.name.split(' ').map(name => name.charAt(0).toUpperCase()).join('');
+    let capitalizedUserName = assigned.name.split(' ').map(name => name.charAt(0).toUpperCase() + name.slice(1)).join(' ');
+    return `                        
+        &lt;div class="dropdown-item">
+            &lt;span class="avatar color" style="background-color: ${assigned.color}">${initials}&lt;/span>
+            &lt;p>${capitalizedUserName}&lt;/p>
+            &lt;input class="icon" type="checkbox" id="${assigned.id}" name="assigned_to" value="0" onclick="event.stopPropagation(); toggleAvatar(${assigned.id}, this)">
+        &lt;/div>
+    `;
 }
 
 
 /**
- * not logged in function to hide the sidebar and profile section
+ * render the avatar of the user
  */
-function notLogin() {
-  let sidebar = document.getElementById('navigation-container');
-  let profile = document.getElementById('profile');
-  let info = document.getElementById('info');
-  let asideNav = document.getElementById('aside-nav');
-  if (sessionStorage.getItem("username") == null) {
-    sidebar.classList.add('no-login-sidebar-none');
-    profile.classList.add('no-login-none');
-    info.classList.add('no-login-none');
-    asideNav.classList.add('no-login-none');
-  } else {
-    sidebar.classList.remove('no-login-sidebar-none');
-    profile.classList.remove('no-login-none');
-    info.classList.remove('no-login-none');
-    asideNav.classList.remove('no-login-none');
-    generateInitials();
-  }
+function rendererAvatar(user) {   
+    let initials = user.name.split(' ').map(name => name.charAt(0).toUpperCase()).join('');
+    return `&lt;span class="avatar-overflow" style="background-color:${user.bgcolor}">
+            ${initials}
+        &lt;/span>`;
+
+}
+
+
+/**
+ * render subtasks in the add task
+ * @param {*} id
+ * @returns {string}
+ */
+function renderSubtasks(id) {
+    return `&lt;div class="validation" id="validation-messages-div-${id}" >
+                        &lt;div class="d-flex-sb-c validation-messages"onmouseover="handleHover(${id}, this)" onmouseout="handleHoverEnd(${id}, this)">
+                            &lt;p class="validation-msg">• ${newTask.subtasks[id].title}&lt;/p>
+                            &lt;div class="btn-div-sub gap-2 d-none" id="subtask-btn-${id}">
+                                &lt;img onclick="editSubtask(${id})" class="sub-btn" src="../assets/icons/edit.svg" alt="edit"/>
+                                &lt;div class="divider-sub-input">&lt;/div>
+                                &lt;img onclick="delSubtask(${id})" class="sub-btn" src="../assets/icons/delete.svg" alt="delete"/>
+                            &lt;/div>
+                        &lt;/div>
+                    &lt;/div>`
+}
+
+
+/**
+ * render edit subtask in the add task
+ * @param {*} id 
+ * @returns {string}
+ */
+function renderEditSubtask(id) {
+    return `&lt;input id="edit-input-${id}" maxlength="100" class="edit-input" placeholder="Add new subtask"/>                      
+            &lt;div id="" class="btn-div-sub gap-2 ">
+                &lt;img onclick="delSubtask(${id})" class="sub-btn" src="../assets/icons/delete.svg" alt="delete"/>
+                &lt;div class="divider-input">&lt;/div>
+                &lt;img onclick="saveEdit(${id})" class="sub-btn" src="../assets/icons/check.svg" alt="check"/>
+            &lt;/div>`
 }</code></pre>
         </article>
     </section>

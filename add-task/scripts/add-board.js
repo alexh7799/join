@@ -67,7 +67,7 @@ function showBoardTasks() {
  * post function for the new task in add-task.html and board.html
  * @param {*} path 
  * @param {*} data 
- * @returns 
+ * @returns {*}
  */
 async function postData(path = "", data = "") { // Anlegen von Daten 
     let response = await fetch(BASE_URL + path + ".json", {

@@ -119,7 +119,7 @@ function assignedToTemplate(usersArray, selectedUser) {
 
 /**
  * update function for the subtasks
- * @returns 
+ * @returns {string}
  */
 function updateSubtask() {
     let messagesContainer = document.getElementById('messages-container');
@@ -191,7 +191,7 @@ function newSubtask(newSubtaskdiv) {
 
 /**
  * render the edit Task User
- * @returns 
+ * @returns {string}
  */
 function renderEditAvatar(task) {
     let avatarContainer = document.getElementById("avatar-container"+ task.firebaseId);

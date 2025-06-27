@@ -2,7 +2,7 @@
 <html lang="en">
 <head>
     <meta charset="utf-8">
-    <title>JSDoc: Source: script.js</title>
+    <title>JSDoc: Source: board/scripts/drag_drop.js</title>
 
     <script src="scripts/prettify/prettify.js"> </script>
     <script src="scripts/prettify/lang-css.js"> </script>
@@ -17,7 +17,7 @@
 
 <div id="main">
 
-    <h1 class="page-title">Source: script.js</h1>
+    <h1 class="page-title">Source: board/scripts/drag_drop.js</h1>
 
     
 
@@ -26,118 +26,95 @@
     
     <section>
         <article>
-            <pre class="prettyprint source linenums"><code>const BASE_URL ="https://join-b1b53-default-rtdb.europe-west1.firebasedatabase.app";
+            <pre class="prettyprint source linenums"><code>let draggedTaskId;
+
 
 /**
- * go back to the last page
+ * event handler for drag and drop
+ * @param {*} event 
  */
-function goBack() {
-  window.history.back();
+function allowDrop(event) {
+    event.preventDefault();
 }
 
 
 /**
- * load nav and header
+ * drag event handler
+ * @param {*} taskId 
  */
-function includeHTML() {
-  let navigation = document.getElementById("navigation-container");
-  navigation.innerHTML = initNav();
-  let header = document.getElementById("header-container");
-  header.innerHTML = initHeader();
-  let popUp = document.getElementById("overlay-container");
-  popUp.innerHTML = initProfilePopUp();
+function handleDrag(taskId) {
+    const element = document.getElementById(`task${taskId}`);
+    element.classList.add('dragging');
+    draggedTaskId = taskId;
 }
 
 
 /**
- * check the login status
+ * drag end event handler
+ * @param {*} event 
+ * @param {*} taskId 
  */
-function checkLogin() {
-  const isLoginPage = window.location.pathname.includes("join/login/login.html");
-  const sessionUser = sessionStorage.getItem("username");
-  const localUser = localStorage.getItem("username");
-
-  // Wenn Remember-Me aktiv (localUser vorhanden)
-  if (localUser &amp;&amp; !sessionUser) {
-    sessionStorage.setItem("username", localUser);
-    sessionStorage.setItem("email", localStorage.getItem("email"));
-  }
-
-  checkPager(sessionUser);
+function handleDragEnd(event, taskId) {
+    const element = document.getElementById(`task${taskId}`);
+    element.classList.remove('dragging');
 }
 
 
 /**
- * Generate initials for the top right corner in the header section.
+ * drag leave event handler
+ * @param {*} id 
  */
-function generateInitials() {
-  let content = document.getElementById("profile");
+function handleDragLeave(id) {
+    document.getElementById(id).classList.remove('drag-over');
+}
 
-  let userName = sessionStorage.getItem("username");
-  content.innerHTML = "";
-  let nameParts = userName.split(" ");
-  if (nameParts.length >= 2) {
-    let initials = (nameParts[0][0] + nameParts[1][0]).toUpperCase();
-    content.innerHTML = initials;
-  } else if (nameParts.length === 1) {
-    let initials = nameParts[0][0].toUpperCase();
-    content.innerHTML = initials;
-  } else {
-    content.innerHTML = "G";
-  }
+/**
+ * adds an border to the selected/aktive div.
+ * @param {number} id
+ */
+function handleDragOver(id) {
+    document.getElementById(id).classList.add("drag-over");
+}
+  
+
+/**
+ * event handler for the drop action
+ * @param {*} event 
+ * @param {*} newType 
+ */
+async function handleDrop(event, newType) {
+    const taskId = draggedTaskId;
+    fetchNewType(event, newType, taskId)
 }
 
 
-/**
- * random color function for the profile section
- * @returns {string}
- */
-function getRandomColor() {
-  const r = Math.floor(Math.random() * 256);
-  const g = Math.floor(Math.random() * 256);
-  const b = Math.floor(Math.random() * 256);
-  return `#${r.toString(16).padStart(2, '0')}${g.toString(16).padStart(2, '0')}${b.toString(16).padStart(2, '0')}`;
-}
-
 
 /**
- * check link function to highlight the active link in the sidebar
+ * fetch function for the type
+ * @param {*} event 
+ * @param {*} newType 
+ * @param {*} taskId 
  */
-function checkLink() {
-  const currentPath = window.location.pathname;
-  const sidebarLinks = document.querySelectorAll('#navigation-container .aside-nav a');
-  sidebarLinks.forEach(link => {
-    link.classList.remove('active');
-    let href = link.getAttribute('href').replace('../', '');
-    if (currentPath.includes(href)) {
-      link.classList.add('active');
-    } else {
-      link.classList.remove('active');
+async function fetchNewType(event, newType, taskId) {
+    event.preventDefault();
+
+    try {
+        const response = await fetch(BASE_URL + "/tasks/" + taskId + "/.json");
+        let task = await response.json();
+        if (!task) throw new Error("Task not found");
+
+        task.type = newType;
+
+        await fetch(BASE_URL + "/tasks/" + taskId + "/.json", {
+            method: 'PUT',
+            headers: { "Content-Type": "application/json" },
+            body: JSON.stringify(task)
+        });
+
+        await loadingTasks();
+    } catch (error) {
+        console.error('Error updating task:', error);
     }
-  });
-}
-
-
-/**
- * not logged in function to hide the sidebar and profile section
- */
-function notLogin() {
-  let sidebar = document.getElementById('navigation-container');
-  let profile = document.getElementById('profile');
-  let info = document.getElementById('info');
-  let asideNav = document.getElementById('aside-nav');
-  if (sessionStorage.getItem("username") == null) {
-    sidebar.classList.add('no-login-sidebar-none');
-    profile.classList.add('no-login-none');
-    info.classList.add('no-login-none');
-    asideNav.classList.add('no-login-none');
-  } else {
-    sidebar.classList.remove('no-login-sidebar-none');
-    profile.classList.remove('no-login-none');
-    info.classList.remove('no-login-none');
-    asideNav.classList.remove('no-login-none');
-    generateInitials();
-  }
 }</code></pre>
         </article>
     </section>

@@ -134,7 +134,7 @@ function showPicker() {
 /**
  * validate the name of the task
  * @param {*} name 
- * @returns 
+ * @returns {boolean}
  */
 function validateName(name) {
     return name.trim().length >= 1;
@@ -144,7 +144,7 @@ function validateName(name) {
 /**
  * validate the date of the task
  * @param {*} date 
- * @returns 
+ * @returns {boolean}
  */
 function validateDate(date) {
     const today = new Date().toISOString().split('T')[0];
@@ -158,7 +158,7 @@ function validateDate(date) {
 /**
  * validate the category of the task
  * @param {*} cat 
- * @returns 
+ * @returns {boolean}
  */
 function validateCat(cat) {
     if(cat == "") {
@@ -242,7 +242,7 @@ function handleDate(dateInput) {
  * @param {*} title 
  * @param {*} date 
  * @param {*} isValid 
- * @returns 
+ * @returns {boolean}
  */
 function subValidate(title, date, isValid) {
     if (!validateName(title)) {
@@ -384,7 +384,7 @@ function selectCategory(cat) {
 
 /**
  * the last check validation in add-task.html and board.html
- * @returns 
+ * @returns {boolean}
  */
 function lastValidate() {
     let title = document.getElementById("title").value;
@@ -399,7 +399,7 @@ function lastValidate() {
 
 /**
  * render the Avatar for max 6 users
- * @returns 
+ * @returns {void}
  */
 function renderAvatar() {
     let userLength;
