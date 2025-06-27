@@ -81,7 +81,7 @@ function checkLink() {
   sidebarLinks.forEach(link => {
     link.classList.remove('active');
     let href = link.getAttribute('href').replace('../', '');
-    if (currentPath.includes("/join/" + href)) {
+    if (currentPath.includes(href)) {
       link.classList.add('active');
     } else {
       link.classList.remove('active');
