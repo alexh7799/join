@@ -1,0 +1,69 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>JOIN | Help</title>
+    <link rel="shortcut icon" href="../assets/icons/logo1.svg" type="image/x-icon">
+    <link rel="stylesheet" href="../styles/font.css">
+    <link rel="stylesheet" href="../styles/standard.css">
+    <link rel="stylesheet" href="./help.css">
+
+    <link rel="stylesheet" href="../header-sidebar/header-sidebar.css">
+    <script src="../header-sidebar/header-sidebar.js"></script>
+    <script src="../header-sidebar/templates.js"></script>
+</head>
+
+<body onload="initHelp()">
+    <div id="overlay-container" class="overlay-container" onclick="removeOverlay()"></div>
+    <header id="header-container"></header>
+    <aside id="navigation-container"></aside>
+
+    <div class="legal-policy-help help-container container-help-container">
+        <div class="head-legal-policy-help">
+            <h1>Help</h1>
+            <div class="btn" onclick="goBack()">
+                <img src="../assets/icons/arrow-left.svg" alt="arrow">
+            </div>
+        </div>
+        <div class="content-legal-policy-help">
+            <p>Welcome to the help page for <span class="highlighting">Join</span>, your guide to using our kanban project management tool. Here, we'll
+                provide an overview of what <span class="highlighting">Join</span> is, how it can benefit you, and how to use it.</p>
+            <h2>What is Join?</h2>
+            <p><span class="highlighting">Join</span> is a kanban-based project management tool designed and built by a group of dedicated students as
+                part of their web development bootcamp at the Developer Akademie.<br><br> Kanban, a Japanese term meaning
+                "billboard", is a highly effective method to visualize work, limit work-in-progress, and maximize
+                efficiency (or flow). <span class="highlighting">Join</span> leverages the principles of kanban to help users manage their tasks and
+                projects in an intuitive, visual interface.<br><br> It is important to note that <span class="highlighting">Join</span> is designed as an
+                educational exercise and is not intended for extensive business usage. While we strive to ensure the
+                best possible user experience, we cannot guarantee consistent availability, reliability, accuracy, or
+                other aspects of quality regarding <span class="highlighting">Join</span>.</p>
+            <h2>How to use it</h2>
+            <p>Here is a step-by-step guide on how to use <span class="highlighting">Join</span>:</p>
+            <ol>
+                <li><h3>Exploring the Board</h3> When you log in to <span class="highlighting">Join</span>, you'll find a default board. This board represents your
+                    project and contains four default lists: "To Do", "In Progress", “Await feedback” and "Done".</li><br>
+                <li><h3>Creating Contacts</h3> In <span class="highlighting">Join</span>, you can add contacts to collaborate on your projects. Go to the
+                    "Contacts" section, click on "New contact", and fill in the required information. Once added, these
+                    contacts can be assigned tasks and they can interact with the tasks on the board.</li><br>
+                <li><h3>Adding Cards</h3> Now that you've added your contacts, you can start adding cards. Cards represent
+                    individual tasks. Click the "+" button under the appropriate list to create a new card. Fill in the
+                    task details in the card, like task name, description, due date, assignees, etc.</li><br>
+                <li><h3>Moving Cards</h3> As the task moves from one stage to another, you can reflect that on the board by
+                    dragging and dropping the card from one list to another.</li><br>
+                <li><h3>Deleting Cards</h3> Once a task is completed, you can either move it to the "Done" list or delete it.
+                    Deleting a card will permanently remove it from the board. Please exercise caution when deleting
+                    cards, as this action is irreversible.<br><br> Remember that using <span class="highlighting">Join</span> effectively requires consistent
+                    updates from you and your team to ensure the board reflects the current state of your project.<br><br> Have
+                    more questions about <span class="highlighting">Join</span>? Feel free to contact us at join@mail.com. We're here to help you!
+                </li><br>
+            </ol>
+            <p>Enjoy using Join!</p>
+        </div>
+    </div>
+    <script src="../script.js"></script>
+    <script src="./help.js"></script>
+</body>
+
+</html>
