@@ -91,7 +91,7 @@ function showError(fieldId, message) {
  */
 async function assignedUsers(selectedUser) {
     try {
-        const response = await fetch(BASE_URL + "users/.json");
+        const response = await fetch(BASE_URL + "/users/.json");
         let user = await response.json();
         usersArray = Object.entries(user).map(([key, user]) => ({
             ...user,

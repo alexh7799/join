@@ -23,7 +23,7 @@ async function createTask(type) {
     newTask.type = type;
     try {
         if(lastValidate()){
-            await postData("tasks/", newTask);
+            await postData("/tasks/", newTask);
             await clearForm();
             await showBoardTasks();
             await setTimeout(()=>{

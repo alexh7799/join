@@ -1,4 +1,4 @@
-const BASE_URL = "https://join-c39f7-default-rtdb.europe-west1.firebasedatabase.app/users/";
+let path = "/users/";
 
 let rememberMeValue = false;
 
@@ -95,7 +95,7 @@ async function checkUser() {
 async function loadUsers(resultDiv,emailInput,passwordInput) {
     let users;
     let foundUser = null;
-    const response = await fetch(`${BASE_URL}.json`);
+    const response = await fetch(BASE_URL + path + ".json");
     if (!response.ok) throw new Error("Fehler beim Abrufen der Datenbank.");
     users = await response.json();
         if(emailInput === "" || passwordInput === "") {

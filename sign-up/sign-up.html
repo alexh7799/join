@@ -30,18 +30,18 @@
 
             <div class="flexer">
                 <div>
-                    <input required name="name" class="login-text-input" id="name-input" type="text" placeholder="Name">
+                    <input name="name" class="login-text-input" id="name-input" autocomplete="name" type="text" placeholder="Name">
                     <div id="error-div-name" class="error-message d-none"></div>
                 </div>
                 <div>
-                    <input required name="email" class="login-text-input" id="email-input" type="email" placeholder="E-Mail">
+                    <input name="email" class="login-text-input" id="email-input" autocomplete="email" type="email" placeholder="E-Mail">
                     <div id="error-div-email" class="error-message d-none"></div>
                 </div>
 
                 <div class="password-input-container">
                     <div class="d-flex-c-c pass-icon-container">
-                        <input required name="pass1" id="password-input-1" class="login-text-input password-input"
-                            type="password" placeholder="Password" onfocus="handlePasswordFocus('password-input-1')" onblur="handlePasswordBlur('password-input-1')">
+                        <input name="pass1" id="password-input-1" class="login-text-input password-input"
+                            type="password" placeholder="Password" autocomplete="new-password">
                         <div id="password-icon-1">
                             <svg style="pointer-events: none;" width="24" height="25" viewBox="0 0 24 25" fill="none"
                                 xmlns="http://www.w3.org/2000/svg">
@@ -62,8 +62,8 @@
 
                 <div class="password-input-container" id="confirm-password-container">
                     <div class="d-flex-c-c pass-icon-container">
-                        <input required name="pass2" id="password-input-2" class="login-text-input password-input"
-                            type="password" placeholder="Confirm Password" onfocus="handlePasswordFocus('password-input-2')" onblur="handlePasswordBlur('password-input-2')">
+                        <input name="pass2" id="password-input-2" class="login-text-input password-input"
+                            type="password" placeholder="Confirm Password" autocomplete="new-password">
                         <div id="password-icon-2">
                             <svg style="pointer-events: none;" width="24" height="25" viewBox="0 0 24 25" fill="none"
                                 xmlns="http://www.w3.org/2000/svg">
@@ -85,7 +85,7 @@
             </div>
             <div>
                 <label class="custom-checkbox">
-                    <input type="checkbox" name="privacy-checkbox" id="privacy-checkbox" required>
+                    <input type="checkbox" name="privacy-checkbox" id="privacy-checkbox">
                     <span class="checkbox-icon"></span>
                     <span class="ppcb">I accept the <a href="../privacypolicy/privacypolicy.html">Privacy policy</a></span>
                 </label>
@@ -108,8 +108,6 @@
             <p>You Signed Up successfull</p>
         </div>
     </div>
-
-    <script src="../script.js"></script>
     <script src="./scripts/sign-up.js"></script>
 </body>
 

@@ -1,4 +1,3 @@
-const BASE_URL = "https://join-c39f7-default-rtdb.europe-west1.firebasedatabase.app/";
 
 let tasksArray = [];
 let editedTask = [];
@@ -21,7 +20,7 @@ async function initBoard() {
  */
 async function loadingTasks() {
   try {
-      let response = await fetch(BASE_URL + "tasks/" + ".json");
+      let response = await fetch(BASE_URL + "/tasks/" + ".json");
       let tasks = await response.json();
       if (tasks == null) tasks = {};
       tasksArray = Object.entries(tasks).map(([key, tasks]) => ({
@@ -231,7 +230,7 @@ async function updateTask(editCard) {
       "subtasks": editCard.subtasks,
       "title": editCard.title
     };
-    let response = await fetch(BASE_URL + "tasks/" + editCard.firebaseId + ".json", {
+    let response = await fetch(BASE_URL + "/tasks/" + editCard.firebaseId + "/.json", {
         method: "PUT",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify(updatedData)
@@ -248,7 +247,7 @@ async function updateTask(editCard) {
  * @param {*} id 
  */
 async function deleteTask(id) {
-  let url = BASE_URL + "tasks/" + id + "/" + ".json";
+  let url = BASE_URL + "/tasks/" + id + "/.json";
   let response = await fetch(url, {
       method: "DELETE"
   });

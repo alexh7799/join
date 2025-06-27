@@ -1,9 +1,4 @@
 /**
- * Globale Variable the url from database
- */
-const BASE_URL ="https://join-c39f7-default-rtdb.europe-west1.firebasedatabase.app/tasks";
-
-/**
  * Init function for summary
  */
 function initSummary() {
@@ -71,9 +66,9 @@ function goToBoard() {
 /**
  * loading the numbers for der summary page of the database
  */
-async function loadingNumbers() {
+async function loadingNumbers(path) {
     try {
-        let response = await fetch(BASE_URL + ".json");
+        let response = await fetch(BASE_URL + "/tasks/" + ".json");
         let tasks = await response.json();
         if (tasks == null) tasks = {};
         let groupedTasks = {todo: 0, progress: 0, awaiting: 0, done: 0};

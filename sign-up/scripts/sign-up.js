@@ -4,8 +4,6 @@ let errorMsg = document.getElementById("false");
 let signUpBtn = document.getElementById("signUpBtn");
 let usercount;
 let userArray = []
-const BASE_URL = "https://join-c39f7-default-rtdb.europe-west1.firebasedatabase.app/";
-
 
 /**
  * init function for sign up page
@@ -20,7 +18,7 @@ async function init() {
  * load user counter for datebase
  */
 async function loadUserCounter() {
-    let response = await fetch(BASE_URL + "usercount.json");
+    let response = await fetch(BASE_URL + "/usercount/.json");
     let responseToJson = await response.json();  
     usercount = responseToJson;
 }
@@ -120,7 +118,7 @@ function showSuccessMsgTasks(name,email) {
  */
 async function loadingSignUsers(name, email, password1) {
     try {
-        const response = await fetch(BASE_URL + "users/.json");
+        const response = await fetch(BASE_URL + "/users/.json");
         const users = await response.json(); 
         let existingUser = null;
         for (let key in users) {
@@ -213,7 +211,7 @@ async function validateSignUpForm() {
  * @param {*} name 
  */
 async function updateUser(key, password, name) {
-    await fetch(BASE_URL + `users/${key}.json`, {
+    await fetch(BASE_URL + `/users/${key}/.json`, {
         method: 'PATCH',
         body: JSON.stringify({ 
             password: password,
@@ -233,7 +231,7 @@ async function createNewUser(name, email, password) {
     let color = getRandomColor();
     await postData(`/users/`, {"name": name, "email": email, "password": password, "id": usercount + 1,"phone": "", "color": `${color}`});
     usercount++;
-    await putUsercount(`usercount`, usercount); 
+    await putUsercount(`/usercount/`, usercount); 
 }
 
 

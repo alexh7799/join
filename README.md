@@ -39,3 +39,6 @@ A typical Kanban board consists of several columns representing the workflow. Ea
 | Task 4     |             | Task 5   |
 
 ---
+
+onfocus="handlePasswordFocus('password-input-2')"
+ onblur="handlePasswordBlur('password-input-2')"

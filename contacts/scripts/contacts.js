@@ -1,4 +1,3 @@
-const BASE_URL = "https://join-c39f7-default-rtdb.europe-west1.firebasedatabase.app/";
 let usercount = 0;
 let userArray = []; 
 
@@ -59,7 +58,7 @@ function clearContactForm() {
  */
 async function loadingUsers() {
     try {
-        let responseUser = await fetch(BASE_URL + "users" + ".json");
+        let responseUser = await fetch(BASE_URL + "/users/.json");
         let user = await responseUser.json();
         let usersArray = Object.entries(user).map(([key, user]) => ({
             ...user,
@@ -181,7 +180,7 @@ function closeContactDetails() {
  */
 async function loadUserCounter() {
     try {
-        let response = await fetch(BASE_URL  + "usercount" + ".json");
+        let response = await fetch(BASE_URL  + "/usercount/.json");
         let responseToJson = await response.json();
         usercount = responseToJson;
     } catch (error) {
@@ -203,7 +202,7 @@ async function createUserContact() {
             let name = document.getElementById("name").value;
             let email = document.getElementById("email").value;
             let phone = document.getElementById("phone").value;
-            const response = await postUser(`users/`, {
+            const response = await postUser(`/users/`, {
                 "name": name,
                 "email": email,
                 "password": "",
@@ -213,7 +212,7 @@ async function createUserContact() {
             });
             if (response.name) {
                 usercount++;
-                await putUsercount(`usercount/`, usercount);
+                await putUsercount(`/usercount/`, usercount);
                 await loadingUsers();
                 closeContactForm();
                 await showSuccessMsgTasks();
@@ -233,7 +232,7 @@ async function createUserContact() {
  * @returns 
  */
 async function putUsercount(path = "", data = "") {
-    let response = await fetch(BASE_URL + "usercount/" + ".json", {
+    let response = await fetch(BASE_URL + path + ".json", {
         method: "PUT",
         headers: {
             "Content-Type": "application/json",
@@ -268,7 +267,7 @@ async function postUser(path = "", data = "") { // Anlegen von Daten
  * @param {*} id 
  */
 async function deleteUser(id) {
-    let url = BASE_URL + "users/" + id + "/" + ".json";
+    let url = BASE_URL + "/users/" + id + "/.json";
     let response = await fetch(url, {
         method: "DELETE"
     });
@@ -304,7 +303,7 @@ async function updateUser(user) {
             return;
         } else {
             const updatedData = { name: document.getElementById("name").value, email: document.getElementById("email").value, phone: document.getElementById("phone").value, color: userArray[user].color, id: userArray[user].id, password: userArray[user].password};
-            let response = await fetch(BASE_URL + "users/" + userArray[user].firebaseId + ".json", {
+            let response = await fetch(BASE_URL + "/users/" + userArray[user].firebaseId + ".json", {
                 method: "PUT",
                 headers: { "Content-Type": "application/json" },
                 body: JSON.stringify(updatedData)
@@ -313,7 +312,7 @@ async function updateUser(user) {
                 const index = userArray.findIndex(u => u.id === updatedData.id);
                 updatedData.firebaseId = userArray[user].firebaseId;
                 if (index !== -1) userArray[index] = updatedData;
-                await reUpdateUser();
+                await reUpdateUser(updatedData);
             }
         }
     } catch (error) {
@@ -325,7 +324,7 @@ async function updateUser(user) {
 /**
  * update function for updateuser
  */
-async function reUpdateUser() {
+async function reUpdateUser(updatedData) {
     await loadingUsers();
     showContactDetails(updatedData.id);
     closeContactForm();

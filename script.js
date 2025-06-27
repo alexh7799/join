@@ -1,3 +1,5 @@
+const BASE_URL ="https://join-b1b53-default-rtdb.europe-west1.firebasedatabase.app";
+
 /**
  * go back to the last page
  */
