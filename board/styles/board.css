@@ -418,6 +418,7 @@ main {
 }
 
 .find-task-input {
+    min-width: 200px;
     border: none;
     padding: 8px 16px;
     font-size: 16px;
