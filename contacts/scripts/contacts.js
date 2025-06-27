@@ -249,7 +249,7 @@ async function putUsercount(path = "", data = "") {
  * @param {*} data 
  * @returns 
  */
-async function postUser(path = "", data = "") { // Anlegen von Daten 
+async function postUser(path = "", data = "") {
     let response = await fetch(BASE_URL + path + ".json", {
         method: "POST",
         headers: {

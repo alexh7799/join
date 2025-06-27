@@ -68,21 +68,6 @@ async function handleDrop(event, newType) {
  * @param {*} newType 
  * @param {*} taskId 
  */
-// async function fetchNewType(event, newType, taskId) {
-//     event.preventDefault();
-    
-//     try {
-//         await fetch(BASE_URL + "/tasks/" + taskId + "/.json", {
-//             method: 'PATCH',
-//             body: JSON.stringify({ type: newType })
-//         });
-
-//         await loadingTasks();
-//     } catch (error) {
-//         console.error('Error updating task:', error);
-//     }
-// }
-
 async function fetchNewType(event, newType, taskId) {
     event.preventDefault();
 
