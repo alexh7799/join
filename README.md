@@ -11,6 +11,17 @@ Kanban is a visual method for managing workflows and projects. Originally develo
 
 ---
 
+### **Features**
+
+- Create, edit, and delete tasks
+- Drag & drop tasks between columns
+- Assign contacts to tasks
+- Responsive design for desktop and mobile
+- User authentication and registration
+- Visual feedback and notifications
+
+---
+
 ### **Basic Principles of Kanban:**
 
 1. **Visualize Work:** Tasks are represented on a Kanban board, divided into columns that represent different stages of the workflow (e.g., "To Do," "In Progress," "Done").
@@ -40,5 +51,3 @@ A typical Kanban board consists of several columns representing the workflow. Ea
 
 ---
 
-onfocus="handlePasswordFocus('password-input-2')"
- onblur="handlePasswordBlur('password-input-2')"
